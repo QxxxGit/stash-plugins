@@ -1,0 +1,16 @@
+{
+    "name": "stash-notes",
+    "version": "1.0",
+    "main": "src/script.tsx",
+    "author": "Qx",
+    "scripts": {
+        "build": "yarn tsc && yarn run copy:yml",
+        "copy:yml": "cpx \"src/stash-notes.yml\" \"dist\""
+    },
+    "devDependencies": {
+        "typescript": "^5.2.2",
+        "cpx": "^1.5.0",
+        "@types/react": "^18.2.31",
+        "@types/react-dom": "^18.2.14"
+    }
+}

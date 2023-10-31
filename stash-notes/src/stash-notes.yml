@@ -1,7 +1,0 @@
-name: Stash Notes
-description: Adds a note section to the Settings tools page, using a browser's local storage to persist data.
-url: https://github.com/QxxxGit/stash-plugins
-version: 1.0
-ui:
-  javascript:
-  - script.js

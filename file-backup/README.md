@@ -10,6 +10,8 @@ Run the command below to install stashapp-tools.
 
 ```pip install -r requirements.txt```
 
+Update `config.json` to add your save directory.
+
 ## Known Bugs
 
 * When removing a filter (pressing the x), the paths aren't updated. Refreshing the page or adding a new filter fixes it. Possibly cached results?

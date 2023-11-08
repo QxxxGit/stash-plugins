@@ -1,0 +1,12 @@
+name: File Backup
+description: Adds a button to scene and image walls to backup the current results to a specified directory.
+version: 1.0
+exec:
+  - python
+  - "{pluginDir}/fileBackupTask.py"
+ui:
+  javascript:
+  - fileBackupUI.js
+tasks:
+  - name: Backup
+    description: Backup the currently displayed files

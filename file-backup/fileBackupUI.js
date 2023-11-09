@@ -106,5 +106,13 @@
     });
 
     stash.addEventListener('page:scenes', () => display('scenes'));
+    stash.addEventListener('page:movie:scenes', () => display('scenes'));
+    stash.addEventListener('page:performer:scenes', () => display('scenes'));
+    stash.addEventListener('page:studio:scenes', () => display('scenes'));
+    stash.addEventListener('page:tag:scenes', () => display('scenes'));
+
     stash.addEventListener('page:images', () => display('images'));
+    stash.addEventListener('page:performer:images', () => display('images'));
+    stash.addEventListener('page:studio:images', () => display('images'));
+    stash.addEventListener('page:tag:images', () => display('images'));
 })();

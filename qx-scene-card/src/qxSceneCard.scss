@@ -1,0 +1,105 @@
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 100; font-display: swap; src: url("/plugin/qxSceneCard/assets/fonts/Inter-Thin.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 300; font-display: swap; src: url("/plugin/qxSceneCard/assets/fonts/Inter-Light.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("/plugin/qxSceneCard/assets/fonts/Inter-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("/plugin/qxSceneCard/assets/fonts/Inter-Bold.woff2") format("woff2"); }
+
+.scene-card {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    border-radius: 6px;
+    box-shadow: 3px 3px 2px 0px #10161a66,0 0 #10161a00,0 0 #10161a00;
+
+    &.watched {
+        opacity: 0.3;
+    }
+
+    .studio-overlay.hide {
+        display: none;
+    }
+
+    .card-section {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+
+        .performers {
+            order: 1;
+            display: flex;
+            line-height: 2em;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+            justify-content: space-between;
+
+            .list {
+                width: 80%;
+
+                a {
+                    font-weight: 700;
+                    margin-right: 1em;
+    
+                    &.MALE,
+                    &.TRANSGENDER_MALE {
+                        color: lightblue;
+                    }
+    
+                    &.FEMALE,
+                    &.TRANSGENDER_FEMALE {
+                        color: pink;
+                    }
+    
+                    &.INTERSEX,
+                    &.NONBINARY {
+                        color: #DDA0DD;
+                    }
+                }
+            }
+        }
+
+        // scene title
+        a {
+            order: 2;
+
+            .card-section-title {
+                font-family: 'Inter', sans-serif;
+                font-weight: 400;
+                font-size: 18px;
+                height: 2em;
+                line-height: 1em;
+                align-items: unset;
+            }
+        }
+
+        .footer {
+            display: block;
+            width: 100%;
+            order: 3;
+            margin-top: auto;
+    
+            span {
+                display: inline-block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                width: 33%;
+    
+                &.studio {
+                    font-weight: 700;
+
+                    > a {
+                        color: lightgray;
+                    }
+                }
+    
+                &.views {
+                    text-align: center;
+                }
+    
+                &.date {
+                    text-align: right;
+                }
+            }
+        }
+    }
+}

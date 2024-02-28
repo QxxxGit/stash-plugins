@@ -1,0 +1,17 @@
+name: Qx Scene Card
+description: Redesigns the scene card.
+version: 1.0
+settings:
+  studio:
+    displayName: Hide studio logo
+    type: BOOLEAN
+  watched:
+    displayName: Fade watched scenes
+    type: BOOLEAN
+ui:
+  javascript:
+  - qxSceneCard.js
+  css:
+  - qxSceneCard.css
+  assets:
+    /: .

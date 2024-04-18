@@ -28,7 +28,7 @@ export enum GenderEnum {
     NON_BINARY
 }
 
-export interface IPerformers {
+export interface IPerformer {
     id: number;
     name: string;
     gender?: GenderEnum
@@ -42,11 +42,19 @@ export interface IStudio {
 export interface IScene {
     id: number;
     date?: string;
-    performers?: IPerformers[];
+    performers?: IPerformer[];
     studio?: IStudio;
     play_count?: number;
 }
 
 export interface ISceneCardProperties {
     scene: IScene;
+}
+
+export interface IQxSceneCardSettings {
+    fadeWatched: boolean;
+    hideOCounter: boolean;
+    hideMarkers: boolean;
+    hideMovies: boolean;
+    hideStudio: boolean;
 }

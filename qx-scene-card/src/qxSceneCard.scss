@@ -14,7 +14,7 @@
         opacity: 0.3;
     }
 
-    .studio-overlay.hide {
+    .hide {
         display: none;
     }
 
@@ -27,13 +27,16 @@
             order: 1;
             display: flex;
             line-height: 2em;
-            overflow: hidden;
-            white-space: nowrap;
             width: 100%;
             justify-content: space-between;
+            overflow-y: hidden;
 
             .list {
-                width: 80%;
+                display: flex;
+                line-height: 2em;
+                max-height: 2em;
+                overflow-y: hidden;
+                flex-wrap: wrap;
 
                 a {
                     font-weight: 700;
@@ -85,7 +88,7 @@
                 width: 33%;
     
                 &.studio {
-                    font-weight: 700;
+                    font-weight: 400;
 
                     > a {
                         color: lightgray;

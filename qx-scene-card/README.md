@@ -6,6 +6,7 @@ Plugin that redesigns the scene card for Stash.
 
 * Hide studio logo setting
 * Fade watched scenes setting
+* Hide marker, movie, o-counter popover buttons settings
 * View counter
 * Performers at-a-glance
 

@@ -36,7 +36,7 @@
 .scene-card.watched {
   opacity: 0.3;
 }
-.scene-card .studio-overlay.hide {
+.scene-card .hide {
   display: none;
 }
 .scene-card .card-section {
@@ -48,13 +48,16 @@
   order: 1;
   display: flex;
   line-height: 2em;
-  overflow: hidden;
-  white-space: nowrap;
   width: 100%;
   justify-content: space-between;
+  overflow-y: hidden;
 }
 .scene-card .card-section .performers .list {
-  width: 80%;
+  display: flex;
+  line-height: 2em;
+  max-height: 2em;
+  overflow-y: hidden;
+  flex-wrap: wrap;
 }
 .scene-card .card-section .performers .list a {
   font-weight: 700;
@@ -94,7 +97,7 @@
   width: 33%;
 }
 .scene-card .card-section .footer span.studio {
-  font-weight: 700;
+  font-weight: 400;
 }
 .scene-card .card-section .footer span.studio > a {
   color: lightgray;

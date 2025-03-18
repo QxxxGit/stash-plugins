@@ -1,0 +1,102 @@
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url("./assets/fonts/Inter-Thin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("./assets/fonts/Inter-Light.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/Inter-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./assets/fonts/Inter-Bold.woff2") format("woff2");
+}
+@media (min-width: 1200px) {
+  .scene-player-container {
+    padding-left: 5%;
+    padding-right: 5%;
+    flex: 0 0 75%;
+  }
+  .VideoPlayer {
+    height: 74vh;
+  }
+  .scene-container {
+    width: 100%;
+  }
+  .scene-container .scene-details {
+    font-family: "Inter", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    position: absolute;
+    padding-top: 75vh;
+    padding-left: 5%;
+    padding-right: 5%;
+    width: 70%;
+  }
+  .scene-container .scene-details .row {
+    margin-left: unset;
+    margin-right: unset;
+    max-width: 64vw;
+  }
+  .scene-container .scene-details .title {
+    font-size: 24px;
+    margin-bottom: 0.5%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .scene-container .scene-details .description {
+    padding: 1%;
+    background-color: rgba(255, 255, 255, 0.045);
+    border-radius: 10px;
+    margin-top: 0.5em;
+  }
+  .scene-container .scene-details .performer-list {
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .scene-container .scene-details .performer-list .performer {
+    flex: 0 0 auto;
+    gap: 10px;
+  }
+  .scene-container .scene-details .performer-list .performer .picture {
+    align-content: center;
+  }
+  .scene-container .scene-details .performer-list .performer .picture img {
+    clip-path: circle();
+    max-width: 50px;
+  }
+  .scene-container .scene-details .performer-list .performer .info {
+    padding: unset;
+    padding-top: 1%;
+    align-content: center;
+  }
+  .scene-container .scene-details .performer-list .performer .info .scene-count {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .scene-container .side-panel {
+    background-color: green;
+    padding: 0.5em;
+    position: absolute;
+    left: 75vw;
+    max-width: 20%;
+    width: 20%;
+  }
+}

@@ -111,35 +111,6 @@
   };
   var Description_default = Description;
 
-  // src/components/SidePanel/SceneItem.tsx
-  var SceneItem = ({
-    scene
-  }) => {
-    const performers = scene.performers?.map((performer, index) => {
-      return /* @__PURE__ */ React.createElement("span", { key: performer.id }, (index ? ", " : "") + performer.name);
-    });
-    return /* @__PURE__ */ React.createElement(Link, { to: `/scenes/${scene.id}` }, /* @__PURE__ */ React.createElement("div", { className: "scene-item" }, /* @__PURE__ */ React.createElement("div", { className: "thumbnail" }, /* @__PURE__ */ React.createElement("img", { src: scene.paths.screenshot })), /* @__PURE__ */ React.createElement("div", { className: "info" }, /* @__PURE__ */ React.createElement("div", { className: "title" }, maybeGetSceneTitle(scene.title, scene.files)), /* @__PURE__ */ React.createElement("div", { className: "studio" }, scene.studio?.name), /* @__PURE__ */ React.createElement("div", { className: "performers" }, performers), /* @__PURE__ */ React.createElement("div", { className: "date" }, scene.date && /* @__PURE__ */ React.createElement(
-      FormattedDate,
-      {
-        value: scene.date,
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-        timeZone: "utc"
-      }
-    )))));
-  };
-  var SceneItem_default = SceneItem;
-
-  // src/components/SidePanel/QueuePanel.tsx
-  var QueuePanel = ({
-    queue
-  }) => {
-    const sceneItems = queue.map((scene) => /* @__PURE__ */ React.createElement(SceneItem_default, { scene }));
-    return /* @__PURE__ */ React.createElement("div", { className: "scene-list" }, sceneItems);
-  };
-  var QueuePanel_default = QueuePanel;
-
   // src/hooks/useStudioScenes.tsx
   function useStudioScenes(studio) {
     const props = React.useMemo(() => {
@@ -160,6 +131,26 @@
     return GQL.useFindScenesQuery(props);
   }
   var useStudioScenes_default = useStudioScenes;
+
+  // src/components/SidePanel/SceneItem.tsx
+  var SceneItem = ({
+    scene
+  }) => {
+    const performers = scene.performers?.map((performer, index) => {
+      return /* @__PURE__ */ React.createElement("span", { key: performer.id }, (index ? ", " : "") + performer.name);
+    });
+    return /* @__PURE__ */ React.createElement(Link, { to: `/scenes/${scene.id}` }, /* @__PURE__ */ React.createElement("div", { className: "scene-item" }, /* @__PURE__ */ React.createElement("div", { className: "thumbnail" }, /* @__PURE__ */ React.createElement("img", { src: scene.paths.screenshot })), /* @__PURE__ */ React.createElement("div", { className: "info" }, /* @__PURE__ */ React.createElement("div", { className: "title" }, maybeGetSceneTitle(scene.title, scene.files)), /* @__PURE__ */ React.createElement("div", { className: "studio" }, scene.studio?.name), /* @__PURE__ */ React.createElement("div", { className: "performers" }, performers), /* @__PURE__ */ React.createElement("div", { className: "date" }, scene.date && /* @__PURE__ */ React.createElement(
+      FormattedDate,
+      {
+        value: scene.date,
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        timeZone: "utc"
+      }
+    )))));
+  };
+  var SceneItem_default = SceneItem;
 
   // src/components/SidePanel/SceneList.tsx
   var SceneList = ({ scenes }) => {
@@ -192,15 +183,7 @@
       Tab
     } = libraries.Bootstrap;
     const [activeTabKey, setActiveTabKey] = React.useState("side-panel-queue");
-    return /* @__PURE__ */ React.createElement("div", { className: "side-panel" }, /* @__PURE__ */ React.createElement(
-      Tab.Container,
-      {
-        activeKey: activeTabKey,
-        onSelect: (tab) => tab && setActiveTabKey(tab)
-      },
-      /* @__PURE__ */ React.createElement(Nav, { variant: "tabs", className: "mr-auto" }, queue.length > 0 && /* @__PURE__ */ React.createElement(Nav.Item, null, /* @__PURE__ */ React.createElement(Nav.Link, { eventKey: "side-panel-queue" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "queue" }))), studio && /* @__PURE__ */ React.createElement(Nav.Item, null, /* @__PURE__ */ React.createElement(Nav.Link, { eventKey: "side-panel-studio" }, studio.name))),
-      /* @__PURE__ */ React.createElement(Tab.Content, null, queue.length > 0 && /* @__PURE__ */ React.createElement(Tab.Pane, { eventKey: "side-panel-queue" }, /* @__PURE__ */ React.createElement(QueuePanel_default, { queue })), studio && /* @__PURE__ */ React.createElement(Tab.Pane, { eventKey: "side-panel-studio" }, /* @__PURE__ */ React.createElement(StudioPanel_default, { studio })))
-    ));
+    return /* @__PURE__ */ React.createElement("div", { className: "side-panel" }, studio && /* @__PURE__ */ React.createElement(StudioPanel_default, { studio }));
   };
   var SidePanel_default = SidePanel;
 

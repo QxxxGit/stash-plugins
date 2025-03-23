@@ -23,7 +23,10 @@ const SidePanel: React.FC<{
 
     return (
         <div className="side-panel">
-            <Tab.Container
+            {studio && (
+                <StudioPanel studio={studio} />
+            )}
+            {/* <Tab.Container
                 activeKey={activeTabKey}
                 onSelect={(tab: any) => tab && setActiveTabKey(tab)}
             >
@@ -55,7 +58,7 @@ const SidePanel: React.FC<{
                         </Tab.Pane>
                     )}
                 </Tab.Content>
-            </Tab.Container>
+            </Tab.Container> */}
         </div>
     )
 }

@@ -156,6 +156,17 @@
             max-width: 20%;
             width: 20%;
 
+            .nav-tabs {
+                overflow-x: auto;
+                overflow-y: hidden;
+                flex-wrap: nowrap;
+
+                .nav-item {
+                    white-space: nowrap;
+                    margin-bottom: 0.5em;
+                }
+            }
+
             .tab-content {
                 .tab-pane {
                     .scene-list {

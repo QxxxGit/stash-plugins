@@ -148,6 +148,15 @@
     max-width: 20%;
     width: 20%;
   }
+  .scene-container .side-panel .nav-tabs {
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+  }
+  .scene-container .side-panel .nav-tabs .nav-item {
+    white-space: nowrap;
+    margin-bottom: 0.5em;
+  }
   .scene-container .side-panel .tab-content .tab-pane .scene-list {
     display: flex;
     flex-direction: column;

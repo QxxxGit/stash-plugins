@@ -36,6 +36,7 @@ interface IScenePageProperties {
                 <SidePanel
                     queue={props.queueScenes}
                     studio={scene.studio}
+                    performers={scene.performers}
                 />
             </div>
         )

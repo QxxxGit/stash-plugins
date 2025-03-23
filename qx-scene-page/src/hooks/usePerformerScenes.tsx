@@ -1,14 +1,14 @@
 import { GQL, React } from "../globals";
-import { IStudio } from "../types/IStudio";
+import { IPerformer } from "../types/IPerformer";
 
-function useStudioScenes(studio: IStudio) {
+function usePerformerScenes(performer: IPerformer) {
     const props = React.useMemo(() => {
         return { 
             variables: {
                 scene_filter: {
-                    studios: {
-                        value: [studio.id],
-                        modifier: "EQUALS"
+                    performers: {
+                        value: [performer.id],
+                        modifier: "INCLUDES"
                     }
                 },
                 filter: {
@@ -16,9 +16,9 @@ function useStudioScenes(studio: IStudio) {
                 }
             }
         }
-    }, [studio]);
+    }, [performer]);
 
     return GQL.useFindScenesQuery(props);
 }
 
-export default useStudioScenes;
+export default usePerformerScenes;

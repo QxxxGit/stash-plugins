@@ -111,15 +111,15 @@
   };
   var Description_default = Description;
 
-  // src/hooks/useStudioScenes.tsx
-  function useStudioScenes(studio) {
+  // src/hooks/usePerformerScenes.tsx
+  function usePerformerScenes(performer) {
     const props = React.useMemo(() => {
       return {
         variables: {
           scene_filter: {
-            studios: {
-              value: [studio.id],
-              modifier: "EQUALS"
+            performers: {
+              value: [performer.id],
+              modifier: "INCLUDES"
             }
           },
           filter: {
@@ -127,10 +127,10 @@
           }
         }
       };
-    }, [studio]);
+    }, [performer]);
     return GQL.useFindScenesQuery(props);
   }
-  var useStudioScenes_default = useStudioScenes;
+  var usePerformerScenes_default = usePerformerScenes;
 
   // src/components/SidePanel/SceneItem.tsx
   var SceneItem = ({
@@ -160,6 +160,48 @@
   };
   var SceneList_default = SceneList;
 
+  // src/components/SidePanel/PerformerPanel.tsx
+  var PerformerPanel = ({
+    performer
+  }) => {
+    const { data, loading } = usePerformerScenes_default(performer);
+    const scenes = data?.findScenes?.scenes;
+    if (loading)
+      return /* @__PURE__ */ React.createElement(LoadingIndicator, null);
+    return /* @__PURE__ */ React.createElement(SceneList_default, { scenes });
+  };
+  var PerformerPanel_default = PerformerPanel;
+
+  // src/components/SidePanel/QueuePanel.tsx
+  var QueuePanel = ({
+    queue
+  }) => {
+    const sceneItems = queue.map((scene) => /* @__PURE__ */ React.createElement(SceneItem_default, { scene }));
+    return /* @__PURE__ */ React.createElement("div", { className: "scene-list" }, sceneItems);
+  };
+  var QueuePanel_default = QueuePanel;
+
+  // src/hooks/useStudioScenes.tsx
+  function useStudioScenes(studio) {
+    const props = React.useMemo(() => {
+      return {
+        variables: {
+          scene_filter: {
+            studios: {
+              value: [studio.id],
+              modifier: "EQUALS"
+            }
+          },
+          filter: {
+            sort: "random"
+          }
+        }
+      };
+    }, [studio]);
+    return GQL.useFindScenesQuery(props);
+  }
+  var useStudioScenes_default = useStudioScenes;
+
   // src/components/SidePanel/StudioPanel.tsx
   var StudioPanel = ({
     studio
@@ -182,8 +224,24 @@
       Nav,
       Tab
     } = libraries.Bootstrap;
-    const [activeTabKey, setActiveTabKey] = React.useState("side-panel-queue");
-    return /* @__PURE__ */ React.createElement("div", { className: "side-panel" }, studio && /* @__PURE__ */ React.createElement(StudioPanel_default, { studio }));
+    const determineDefaultTab = queue && queue.length > 0 ? "side-panel-queue" : studio ? "side-panel-studio" : performers ? `side-panel-performer-${performers[0].id}` : "";
+    console.log(determineDefaultTab);
+    const [activeTabKey, setActiveTabKey] = React.useState(determineDefaultTab);
+    const maybeRenderPerformerTabs = () => {
+      return /* @__PURE__ */ React.createElement(React.Fragment, null, performers?.map((p) => /* @__PURE__ */ React.createElement(Nav.Item, null, /* @__PURE__ */ React.createElement(Nav.Link, { eventKey: `side-panel-performer-${p.id}` }, p.name))));
+    };
+    const maybeRenderPerformerTabPanes = () => {
+      return /* @__PURE__ */ React.createElement(React.Fragment, null, performers?.map((p) => /* @__PURE__ */ React.createElement(Tab.Pane, { eventKey: `side-panel-performer-${p.id}` }, /* @__PURE__ */ React.createElement(PerformerPanel_default, { performer: p }))));
+    };
+    return /* @__PURE__ */ React.createElement("div", { className: "side-panel" }, /* @__PURE__ */ React.createElement(
+      Tab.Container,
+      {
+        activeKey: activeTabKey,
+        onSelect: (tab) => tab && setActiveTabKey(tab)
+      },
+      /* @__PURE__ */ React.createElement(Nav, { variant: "tabs", className: "mr-auto" }, queue && queue.length > 0 && /* @__PURE__ */ React.createElement(Nav.Item, null, /* @__PURE__ */ React.createElement(Nav.Link, { eventKey: "side-panel-queue" }, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "queue" }))), studio && /* @__PURE__ */ React.createElement(Nav.Item, null, /* @__PURE__ */ React.createElement(Nav.Link, { eventKey: "side-panel-studio" }, studio.name)), maybeRenderPerformerTabs()),
+      /* @__PURE__ */ React.createElement(Tab.Content, null, queue && queue.length > 0 && /* @__PURE__ */ React.createElement(Tab.Pane, { eventKey: "side-panel-queue" }, /* @__PURE__ */ React.createElement(QueuePanel_default, { queue })), studio && /* @__PURE__ */ React.createElement(Tab.Pane, { eventKey: "side-panel-studio" }, /* @__PURE__ */ React.createElement(StudioPanel_default, { studio })), maybeRenderPerformerTabPanes())
+    ));
   };
   var SidePanel_default = SidePanel;
 
@@ -212,7 +270,8 @@
         SidePanel_default,
         {
           queue: props.queueScenes,
-          studio: scene.studio
+          studio: scene.studio,
+          performers: scene.performers
         }
       ));
     };

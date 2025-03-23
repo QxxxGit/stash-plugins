@@ -142,9 +142,8 @@
 
   // src/hooks/useStudioScenes.tsx
   function useStudioScenes(studio) {
-    const [data, setData] = React.useState([]);
-    async function getStudioScenes() {
-      const fetchScenes = await GQL.useFindScenesQuery({
+    const props = React.useMemo(() => {
+      return {
         variables: {
           scene_filter: {
             studios: {
@@ -156,15 +155,9 @@
             sort: "random"
           }
         }
-      });
-      const scenes = fetchScenes?.data?.findScenes?.scenes;
-      if (scenes) {
-        console.log(scenes);
-        setData(scenes);
-      }
-    }
-    getStudioScenes();
-    return data;
+      };
+    }, [studio]);
+    return GQL.useFindScenesQuery(props);
   }
   var useStudioScenes_default = useStudioScenes;
 
@@ -180,11 +173,11 @@
   var StudioPanel = ({
     studio
   }) => {
-    const queryScenes = useStudioScenes_default(studio);
-    const scenes = React.useMemo(() => {
-      return queryScenes;
-    }, [queryScenes]);
-    return !scenes ? /* @__PURE__ */ React.createElement(LoadingIndicator, null) : /* @__PURE__ */ React.createElement(SceneList_default, { scenes });
+    const { data, loading } = useStudioScenes_default(studio);
+    const scenes = data?.findScenes?.scenes;
+    if (loading)
+      return /* @__PURE__ */ React.createElement(LoadingIndicator, null);
+    return /* @__PURE__ */ React.createElement(SceneList_default, { scenes });
   };
   var StudioPanel_default = StudioPanel;
 

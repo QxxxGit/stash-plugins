@@ -3,10 +3,8 @@ import { IScene } from "../types/IScene";
 import { IStudio } from "../types/IStudio";
 
 function useStudioScenes(studio: IStudio) {
-    const [data, setData] = React.useState<IScene[]>([]);
-
-    async function getStudioScenes(){
-        const fetchScenes = await GQL.useFindScenesQuery({
+    const props = React.useMemo(() => {
+        return { 
             variables: {
                 scene_filter: {
                     studios: {
@@ -18,19 +16,10 @@ function useStudioScenes(studio: IStudio) {
                     sort: "random"
                 }
             }
-        });
-
-        const scenes = fetchScenes?.data?.findScenes?.scenes;
-
-        if(scenes) {
-            console.log(scenes);
-            setData(scenes);
         }
-    }
+    }, [studio]);
 
-    getStudioScenes();
-
-    return data;
+    return GQL.useFindScenesQuery(props);
 }
 
 export default useStudioScenes;

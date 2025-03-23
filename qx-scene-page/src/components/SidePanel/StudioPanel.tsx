@@ -8,19 +8,14 @@ const StudioPanel: React.FC<{
 }> = ({
     studio
 }) => {
-    const queryScenes = useStudioScenes(studio);
+    const { data, loading } = useStudioScenes(studio);
 
-    const scenes = React.useMemo(() => {
-        return queryScenes;
-    }, [queryScenes])
+    const scenes = data?.findScenes?.scenes;
 
-    return (
-        !scenes ? (
-            <LoadingIndicator />
-        ) : (
-            <SceneList scenes={scenes} />
-        )
-    )
+    if(loading)
+        return <LoadingIndicator />
+    
+    return <SceneList scenes={scenes} />
 }
 
 export default StudioPanel;

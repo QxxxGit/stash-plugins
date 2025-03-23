@@ -25,6 +25,17 @@
   } = libraries.ReactRouterDOM;
 
   // src/utils/TextUtils.ts
+  function stringToDate(date) {
+    if (!date)
+      return null;
+    const parts = date.split("-");
+    if (parts.length !== 3)
+      return null;
+    const year = Number(parts[0]);
+    const monthIndex = Math.max(0, Number(parts[1]) - 1);
+    const day = Number(parts[2]);
+    return new Date(year, monthIndex, day, 0, 0, 0, 0);
+  }
   function maybeGetSceneTitle(title, files) {
     if (title)
       return title;
@@ -35,6 +46,24 @@
     }
     return "Scene not found";
   }
+  function calculateAge(dateStr, fromDateStr) {
+    if (!dateStr)
+      return 0;
+    const birthdate = stringToDate(dateStr);
+    const fromDate = fromDateStr ? stringToDate(fromDateStr) : /* @__PURE__ */ new Date();
+    if (!birthdate || !fromDate)
+      return 0;
+    let age = fromDate.getFullYear() - birthdate.getFullYear();
+    if (birthdate.getMonth() > fromDate.getMonth() || birthdate.getMonth() >= fromDate.getMonth() && birthdate.getDate() > fromDate.getDate()) {
+      age -= 1;
+    }
+    return age;
+  }
+  var TextUtils = {
+    maybeGetSceneTitle,
+    calculateAge
+  };
+  var TextUtils_default = TextUtils;
 
   // src/components/Header.tsx
   var Header = ({
@@ -55,17 +84,54 @@
   };
   var Header_default = Header;
 
-  // src/components/PerformerList.tsx
-  var PerformerList = ({
-    performers
+  // src/hooks/useConfiguration.tsx
+  function useConfiguration() {
+    const { data } = GQL.useConfigurationQuery();
+    return data?.configuration?.plugins?.qxScenePage;
+  }
+  var useConfiguration_default = useConfiguration;
+
+  // src/components/Performers/PerformerItem.tsx
+  var PerformerItem = ({
+    performer,
+    showAge,
+    scene_date
   }) => {
-    return /* @__PURE__ */ React.createElement("div", { className: "performer-list row" }, performers?.map((performer) => /* @__PURE__ */ React.createElement(Link, { to: `/performers/${performer.id}` }, /* @__PURE__ */ React.createElement("div", { className: "performer row" }, /* @__PURE__ */ React.createElement("div", { className: "picture" }, /* @__PURE__ */ React.createElement("img", { src: performer.image_path })), /* @__PURE__ */ React.createElement("div", { className: "info" }, /* @__PURE__ */ React.createElement("div", { className: "row" }, performer.name), /* @__PURE__ */ React.createElement("div", { className: "scene-count row" }, performer.scene_count + " ", /* @__PURE__ */ React.createElement(
+    function getAge() {
+      if (!showAge)
+        return;
+      const age = TextUtils_default.calculateAge(performer.birthdate, scene_date);
+      return /* @__PURE__ */ React.createElement("span", { className: "age" }, "(", age, ")");
+    }
+    return /* @__PURE__ */ React.createElement(Link, { to: `/performers/${performer.id}` }, /* @__PURE__ */ React.createElement("div", { className: "performer row" }, /* @__PURE__ */ React.createElement("div", { className: "picture" }, /* @__PURE__ */ React.createElement("img", { src: performer.image_path })), /* @__PURE__ */ React.createElement("div", { className: "info" }, /* @__PURE__ */ React.createElement("div", { className: "row" }, performer.name, getAge()), /* @__PURE__ */ React.createElement("div", { className: "scene-count row" }, performer.scene_count + " ", /* @__PURE__ */ React.createElement(
       FormattedMessage,
       {
         id: "countables.scenes",
         values: { count: performer.scene_count }
       }
-    )))))));
+    )))));
+  };
+  var PerformerItem_default = PerformerItem;
+
+  // src/components/Performers/PerformerList.tsx
+  var PerformerList = ({
+    performers,
+    scene_date
+  }) => {
+    const config = useConfiguration_default();
+    function maybeShowAge() {
+      if (!scene_date)
+        return false;
+      return config?.showPerformerAge;
+    }
+    return /* @__PURE__ */ React.createElement("div", { className: "performer-list row" }, performers?.map((performer) => /* @__PURE__ */ React.createElement(
+      PerformerItem_default,
+      {
+        performer,
+        scene_date,
+        showAge: maybeShowAge()
+      }
+    )));
   };
   var PerformerList_default = PerformerList;
 
@@ -84,7 +150,7 @@
     ];
     const componentsLoading = hooks.useLoadComponents(componentsToLoad);
     const {
-      LoadingIndicator: LoadingIndicator2,
+      LoadingIndicator: LoadingIndicator3,
       TagLink
     } = components;
     const {
@@ -97,7 +163,7 @@
       return /* @__PURE__ */ React.createElement("div", { className: "tags" }, tags.map((tag) => /* @__PURE__ */ React.createElement(TagLink, { key: tag.id, tag })));
     }
     if (componentsLoading)
-      return /* @__PURE__ */ React.createElement(LoadingIndicator2, null);
+      return /* @__PURE__ */ React.createElement(LoadingIndicator3, null);
     return /* @__PURE__ */ React.createElement("div", { className: "row" }, /* @__PURE__ */ React.createElement("div", { className: "description col-9" }, /* @__PURE__ */ React.createElement("div", { className: "row" }, date && /* @__PURE__ */ React.createElement(
       FormattedDate,
       {
@@ -107,7 +173,7 @@
         year: "numeric",
         timeZone: "utc"
       }
-    )), /* @__PURE__ */ React.createElement("div", { className: "row" }, maybeRenderTags()), /* @__PURE__ */ React.createElement("div", { className: "row" }, /* @__PURE__ */ React.createElement("p", { className: "pre" }, studio && /* @__PURE__ */ React.createElement(Link, { to: `/studio/${studio.id}` }, /* @__PURE__ */ React.createElement("img", { className: "studio-image", src: studio.image_path })), details), /* @__PURE__ */ React.createElement("p", { className: "pre" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "created_at" }), ":"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement(FormattedDate, { value: created_at, format: "short", timeZone: "utc" }))), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "updated_at" }), ":"), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement(FormattedDate, { value: updated_at, format: "short", timeZone: "utc" })))))), /* @__PURE__ */ React.createElement("div", { className: "markers col-3" }, /* @__PURE__ */ React.createElement(Tab.Container, null, /* @__PURE__ */ React.createElement(Nav, { variant: "tabs", className: "mr-auto" }, /* @__PURE__ */ React.createElement(Nav.Item, null, /* @__PURE__ */ React.createElement(Nav.Link, null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "markers" }))), /* @__PURE__ */ React.createElement(Nav.Item, null, /* @__PURE__ */ React.createElement(Nav.Link, null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "filters" }))), /* @__PURE__ */ React.createElement(Nav.Item, null, /* @__PURE__ */ React.createElement(Nav.Link, null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "file_info" }))), /* @__PURE__ */ React.createElement(Nav.Item, null, /* @__PURE__ */ React.createElement(Nav.Link, null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "history" })))))));
+    )), /* @__PURE__ */ React.createElement("div", { className: "row" }, maybeRenderTags()), /* @__PURE__ */ React.createElement("div", { className: "row" }, /* @__PURE__ */ React.createElement("p", { className: "pre" }, studio && /* @__PURE__ */ React.createElement(Link, { to: `/studio/${studio.id}` }, /* @__PURE__ */ React.createElement("img", { className: "studio-image", src: studio.image_path })), details), /* @__PURE__ */ React.createElement("p", { className: "pre" }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "created_at" }), ": "), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement(FormattedDate, { value: created_at, format: "short", timeZone: "utc" }))), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "updated_at" }), ": "), /* @__PURE__ */ React.createElement("span", null, /* @__PURE__ */ React.createElement(FormattedDate, { value: updated_at, format: "short", timeZone: "utc" })))))), /* @__PURE__ */ React.createElement("div", { className: "markers col-3" }, /* @__PURE__ */ React.createElement(Tab.Container, null, /* @__PURE__ */ React.createElement(Nav, { variant: "tabs", className: "mr-auto" }, /* @__PURE__ */ React.createElement(Nav.Item, null, /* @__PURE__ */ React.createElement(Nav.Link, null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "markers" }))), /* @__PURE__ */ React.createElement(Nav.Item, null, /* @__PURE__ */ React.createElement(Nav.Link, null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "filters" }))), /* @__PURE__ */ React.createElement(Nav.Item, null, /* @__PURE__ */ React.createElement(Nav.Link, null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "file_info" }))), /* @__PURE__ */ React.createElement(Nav.Item, null, /* @__PURE__ */ React.createElement(Nav.Link, null, /* @__PURE__ */ React.createElement(FormattedMessage, { id: "history" })))))));
   };
   var Description_default = Description;
 
@@ -255,7 +321,13 @@
           title: scene.title,
           files: scene.files
         }
-      ), /* @__PURE__ */ React.createElement(PerformerList_default, { performers: scene.performers }), /* @__PURE__ */ React.createElement(
+      ), /* @__PURE__ */ React.createElement(
+        PerformerList_default,
+        {
+          performers: scene.performers,
+          scene_date: scene.date
+        }
+      ), /* @__PURE__ */ React.createElement(
         Description_default,
         {
           details: scene.details,

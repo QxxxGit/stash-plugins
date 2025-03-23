@@ -139,6 +139,10 @@
     padding-top: 1%;
     align-content: center;
   }
+  .scene-container .scene-details .performer-list .performer .info .age {
+    margin-left: 0.3em;
+    color: rgba(255, 255, 255, 0.5);
+  }
   .scene-container .scene-details .performer-list .performer .info .scene-count {
     color: rgba(255, 255, 255, 0.5);
   }

@@ -10,7 +10,8 @@ export enum GenderEnum {
 export interface IPerformer {
     id: number;
     name: string;
-    gender?: GenderEnum
+    gender?: GenderEnum;
+    birthdate?: string;
     image_path?: string;
     scene_count: number;
 }

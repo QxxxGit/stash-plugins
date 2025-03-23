@@ -1,7 +1,7 @@
 import { GQL, React, patch } from "./globals";
 import { IScene } from "./types/IScene";
 import Header from "./components/Header";
-import PerformerList from "./components/PerformerList";
+import PerformerList from "./components/Performers/PerformerList";
 import Description from "./components/Description";
 import SidePanel from "./components/SidePanel/SidePanel";
 
@@ -22,7 +22,10 @@ interface IScenePageProperties {
                         title={scene.title}
                         files={scene.files}
                     />
-                    <PerformerList performers={scene.performers} />
+                    <PerformerList 
+                        performers={scene.performers}
+                        scene_date={scene.date}
+                    />
                     <Description
                         details={scene.details}
                         date={scene.date}

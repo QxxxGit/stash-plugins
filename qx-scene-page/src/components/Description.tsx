@@ -1,4 +1,4 @@
-import { React, components, loadableComponents, utils, hooks, FormattedDate, libraries, FormattedMessage } from "../globals";
+import { React, components, loadableComponents, utils, hooks, FormattedDate, libraries, FormattedMessage, Link } from "../globals";
 import { IStudio } from "../types/IStudio";
 import { ITag } from "../types/ITag";
 
@@ -71,13 +71,29 @@ const Description: React.FC<{
                 <div className="row">
                     <p className="pre">
                         {studio && (
-                            <img className="studio-image" src={studio.image_path} />
+                            <Link to={`/studio/${studio.id}`}>
+                                <img className="studio-image" src={studio.image_path} />
+                            </Link>
                         )}
                         {details}
                     </p>
                     <p className="pre">
-                        {created_at}
-                        {updated_at}
+                        <div>
+                            <span>
+                                <FormattedMessage id="created_at" />{": "}
+                            </span>
+                            <span>
+                                <FormattedDate value={created_at} format="short" timeZone="utc" />
+                            </span>
+                        </div>
+                        <div>
+                            <span>
+                                <FormattedMessage id="updated_at" />{": "}
+                            </span>
+                            <span>
+                                <FormattedDate value={updated_at} format="short" timeZone="utc" />
+                            </span>
+                        </div>
                     </p>
                 </div>
             </div>

@@ -106,6 +106,7 @@
   }
   .scene-container .scene-details .description p.pre img.studio-image {
     float: right;
+    max-width: 300px;
   }
   .scene-container .scene-details .performer-list {
     display: flex;

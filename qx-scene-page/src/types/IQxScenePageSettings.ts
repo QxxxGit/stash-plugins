@@ -1,3 +1,0 @@
-interface IQxScenePageSettings {
-    showPerformerAge: boolean;
-}

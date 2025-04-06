@@ -13,15 +13,14 @@ import {
 	faYoutube,
 } from "../globals";
 
-export interface IExpectedUrlSpecs {
-	name: string;
-	icon: any;
+export interface IURLSpecs {
+	definition: ILinkDefinition;
 	urls: string[];
 }
 
 export interface ILinkDefinition {
 	name: string;
-	icon: any;
+	icon: any; // FontAwesome icon or path
 	addresses: string[];
 	regex?: string;
 }

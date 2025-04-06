@@ -1,6 +1,9 @@
 import { customAssetPath } from "../globals";
 
-export const loadSvgIcon = async (file: any): Promise<SVGElement | null> => {
+const loadSvgIcon = async (
+	signal: AbortSignal,
+	file: any
+): Promise<SVGElement | null> => {
 	const svg = await fetch(`${customAssetPath}/${file}`)
 		.then((response) => response.text())
 		.then((str) => {
@@ -12,4 +15,8 @@ export const loadSvgIcon = async (file: any): Promise<SVGElement | null> => {
 		});
 
 	return svg;
+};
+
+export const SvgUtils = {
+	loadSvgIcon,
 };

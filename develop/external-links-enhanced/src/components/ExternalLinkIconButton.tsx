@@ -1,4 +1,4 @@
-import { components, libraries, React, ReactDOM } from "../globals";
+import { components, faLink, libraries, React, ReactDOM } from "../globals";
 import { TextUtils } from "../utils/text";
 
 type FontAwesomeIconDefinition = any;
@@ -13,7 +13,7 @@ const ExternalLinkIconButton: React.FC<{
 	icon?: IconType;
 	urls: string[];
 	className?: string;
-}> = ({ icon, urls, className }) => {
+}> = ({ icon = faLink, urls, className = "" }) => {
 	if (!urls.length) return null;
 
 	const { Button, Dropdown } = libraries.Bootstrap;
@@ -38,7 +38,9 @@ const ExternalLinkIconButton: React.FC<{
 
 	const renderIcon = () => {
 		if (icon instanceof SVGElement) {
-			return <span dangerouslySetInnerHTML={{ __html: icon }} />;
+			return (
+				<span className="custom-definition" dangerouslySetInnerHTML={{ __html: icon.outerHTML }} />
+			);
 		}
 
 		return <Icon icon={icon} />;

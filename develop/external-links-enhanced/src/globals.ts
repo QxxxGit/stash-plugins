@@ -19,5 +19,5 @@ export const {
 	faYoutube,
 } = libraries.FontAwesomeBrands;
 
-export const customAssetPath = "./plugin/ExternalLinksEnhanced/assets/custom";
+export const customAssetPath = "./plugin/externalLinksEnhanced/assets/custom";
 export const customDefinitionsPath = `${customAssetPath}/custom.json`;

@@ -4,7 +4,7 @@ Plugin that adds additional icons for external links.
 
 ## Supported Links
 
-The following sites are supported:
+The following sites are supported out of the box:
 
 * Facebook (facebook.com)
 * Instagram (instagram.com)
@@ -18,47 +18,41 @@ The following sites are supported:
 * VK (vk.com)
 * YouTube (youtube.com)
 
-Don't see one you need on the list? View [Font Awesome's brand icons](https://fontawesome.com/search?o=r&ip=brands) to see if it's available. Then you can update `externalLinksEnhanced.js` to add your icon to the list. You will need to update two things in the file:
+Want more icons? It's pretty simple to add your own; however, it's recommended to request an icon to be added the CommunityScripts repository. When you install the plugin from the CommunityScripts repository, it will come bundled with icons that the community has contributed.
 
-1. You need to reference it from the library. In the javascript file, add `faSite` (whatever the icon is named... just make sure to keep the `fa` prefix) below `faYoutube`. It should look like:
+## Creating a custom icon
 
-    ```js
-    var {
-        faFacebook,
-        faInstagram,
-        faPatreon,
-        faReddit,
-        faTelegram,
-        faTiktok,
-        faTumblr,
-        faTwitch,
-        faTwitter,
-        faVk,
-        faYoutube,
-        faSite
-    } = libraries.FontAwesomeBrands;
-    ```
+First, you'll need to locate the `custom/` directory found in the plugin's directory. This houses `custom.json` along with the custom icons.
 
-2. In the LinkDefinitions array, there are a list of definitions that have site names, their icon (which is referenced above e.g. `faYoutube`), then an array of addresses. These addresses will be used to detect a match with the link you enter for your performer, group, etc.
+> NOTE: Images and SVGs are supported when using an icon.
 
-    That's it! Optionally, you can edit the `externalLinksEnhanced.css` to change the color of the new icon. Whatever you entered in the `name` property for the link definition will be used here. Example:
+In `custom.json`, you will find link definitions. Below is an example definition.
 
-    ```js
-    {
-        name: "somesite",
-        icon: faSite,
-        baseAddresses: ["somesite.com"]
-    }
-    ```
+```js
+{
+    name: "sitename",
+    icon: "myicon.png",
+    addresses: ["mysitename.com"]
+}
+```
 
-    becomes
+The `name` is a unique identifier. The `icon` can be an SVG or image. The `addresses` array will be used in conjunction with the `regex` property (not shown above since it's not required) for link detection to properly categorize the icons. The default/fallback regex is `https?:\/\/(?:www\.)?${addr}\/`
 
-    ```css
-    .external-links-button .btn.link.somesite {
-        color: green;
-    }
-    ```
+After you've created your definitions, simply toss your icons in the same directory as `custom.json`.
 
-## To do
 
-* Allow custom icons.
+## Things to know
+
+The plugin will fetch both the `custom.json` and icon files from the hard-coded plugin directory:
+
+`./plugin/externalLinksEnhanced/assets/custom`
+
+This means if you rename the `externalLinksEnhanced` directory, things will break. You would need to update `customAssetPath` in the `externalLinksEnhanced.js` file.
+
+## Support
+
+I (Qx) developed this plugin but I'm giving it to the community to change and update it as much as they like. The original source code can be found [here](https://github.com/QxxxGit/stash-plugins/tree/main/develop/external-links-enhanced).
+
+If you're looking for a clean install of the plugin without the custom icons, you can add my plugin repo source to Stash and install it that way:
+
+`https://qxxxgit.github.io/stash-plugins/index.yml`

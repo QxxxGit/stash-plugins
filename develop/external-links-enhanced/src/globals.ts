@@ -21,3 +21,6 @@ export const {
 
 export const customAssetPath = "./plugin/externalLinksEnhanced/assets/custom";
 export const customDefinitionsPath = `${customAssetPath}/custom.json`;
+
+type FontAwesomeIconDefinition = any;
+export type IconType = FontAwesomeIconDefinition | SVGElement;

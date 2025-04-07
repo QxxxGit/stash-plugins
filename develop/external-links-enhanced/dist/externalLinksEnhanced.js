@@ -131,6 +131,111 @@
     getCustomDefinitions
   };
 
+  // src/hooks/useExternalLinkSpecs.ts
+  var useExternalLinkSpecs = (urls) => {
+    const [loading, setLoading] = React.useState(true);
+    const [urlSpecs, setUrlSpecs] = React.useState([]);
+    const [definitions, setDefinitions] = React.useState(
+      LinkDefinitions_default
+    );
+    const updateDefinitions = React.useCallback(
+      (definition) => {
+        setDefinitions(
+          (prev) => prev.find((d) => d.name === definition.name) ? prev : [...prev, definition]
+        );
+      },
+      []
+    );
+    const updateSpecs = React.useCallback((spec, url) => {
+      setUrlSpecs((prev) => {
+        const index = prev.findIndex(
+          (s) => s.definition.name === spec.definition.name
+        );
+        if (index !== -1) {
+          const existingSpec = prev[index];
+          if (existingSpec.urls.includes(url))
+            return prev;
+          const updatedSpec = {
+            ...existingSpec,
+            urls: [...existingSpec.urls, url]
+          };
+          return [
+            ...prev.slice(0, index),
+            updatedSpec,
+            ...prev.slice(index + 1)
+          ];
+        }
+        return [
+          ...prev,
+          {
+            definition: spec.definition,
+            urls: [url]
+          }
+        ];
+      });
+    }, []);
+    const loadCustomDefinitions = React.useCallback(async () => {
+      const customDefinitions = await JsonUtils.getCustomDefinitions();
+      if (!customDefinitions?.length)
+        return;
+      for (const definition of customDefinitions) {
+        const getIcon = await IconUtils.loadIcon(definition.icon);
+        if (!getIcon)
+          continue;
+        updateDefinitions({
+          name: definition.name,
+          icon: getIcon,
+          addresses: definition.addresses,
+          regex: definition.regex
+        });
+      }
+      setLoading(false);
+    }, [updateDefinitions]);
+    const pairLinksToDefinitions = React.useCallback(() => {
+      if (!urls?.length)
+        return;
+      urls.forEach((url) => {
+        const matchedDefinition = definitions.find(
+          (d) => d.addresses.some((addr) => {
+            const regex = new RegExp(
+              d.regex ?? `https?://(?:www.)?${addr}/`
+            );
+            return regex.test(url);
+          })
+        );
+        const definition = matchedDefinition || LinkDefinitions_default.find((d) => d.name === "other");
+        if (definition) {
+          updateSpecs({ definition, urls: [] }, url);
+        }
+      });
+    }, [urls, definitions, updateSpecs]);
+    React.useEffect(() => {
+      if (urls?.length) {
+        loadCustomDefinitions();
+      } else {
+        setLoading(false);
+      }
+    }, [urls, loadCustomDefinitions]);
+    React.useEffect(() => {
+      if (!loading) {
+        pairLinksToDefinitions();
+      }
+    }, [loading, pairLinksToDefinitions]);
+    return { urlSpecs, loading };
+  };
+
+  // src/components/IconRenderer.tsx
+  var IconRenderer = ({ icon }) => {
+    const { Icon } = components;
+    if (icon instanceof SVGElement) {
+      return /* @__PURE__ */ React.createElement("span", { dangerouslySetInnerHTML: { __html: icon.outerHTML } });
+    }
+    if (typeof icon === "string" && icon.includes(".")) {
+      return /* @__PURE__ */ React.createElement("img", { src: `${customAssetPath}/${icon}` });
+    }
+    return /* @__PURE__ */ React.createElement(Icon, { icon });
+  };
+
   // src/utils/text.ts
   var sanitiseURL = (url, siteURL) => {
     if (!url) {
@@ -151,162 +256,56 @@
     sanitiseURL
   };
 
-  // src/components/ExternalLinkIconButton.tsx
-  var ExternalLink = (props) => {
-    return /* @__PURE__ */ React.createElement("a", { target: "_blank", rel: "noopener noreferrer", ...props });
+  // src/components/LinkDropdownMenu.tsx
+  var ExternalLink = (props) => /* @__PURE__ */ React.createElement("a", { target: "_blank", rel: "noopener noreferrer", ...props });
+  var LinkDropdownMenu = ({ urls }) => {
+    const { Dropdown } = libraries.Bootstrap;
+    const menu = /* @__PURE__ */ React.createElement(Dropdown.Menu, null, urls.map((url) => /* @__PURE__ */ React.createElement(
+      Dropdown.Item,
+      {
+        key: url,
+        as: ExternalLink,
+        href: TextUtils.sanitiseURL(url),
+        title: url
+      },
+      url
+    )));
+    return ReactDOM.createPortal(menu, document.body);
   };
+
+  // src/components/ExternalLinkIconButton.tsx
   var ExternalLinkIconButton = ({ icon = faLink, urls, className = "" }) => {
     if (!urls.length)
       return null;
     const { Button, Dropdown } = libraries.Bootstrap;
-    const { Icon } = components;
-    const Menu = () => ReactDOM.createPortal(
-      /* @__PURE__ */ React.createElement(Dropdown.Menu, null, urls.map((url) => /* @__PURE__ */ React.createElement(
-        Dropdown.Item,
-        {
-          key: url,
-          as: ExternalLink,
-          href: TextUtils.sanitiseURL(url),
-          title: url
-        },
-        url
-      ))),
-      document.body
-    );
-    const renderIcon = () => {
-      if (icon instanceof SVGElement) {
-        return /* @__PURE__ */ React.createElement("span", { dangerouslySetInnerHTML: { __html: icon.outerHTML } });
-      } else if (typeof icon === "string" && icon.includes(".")) {
-        return /* @__PURE__ */ React.createElement("img", { src: `${customAssetPath}/${icon}` });
-      }
-      return /* @__PURE__ */ React.createElement(Icon, { icon });
-    };
     return /* @__PURE__ */ React.createElement(Dropdown, { className: "external-links-button" }, /* @__PURE__ */ React.createElement(
       Dropdown.Toggle,
       {
         as: Button,
         className: `minimal link ${className}`
       },
-      renderIcon()
-    ), /* @__PURE__ */ React.createElement(Menu, null));
+      /* @__PURE__ */ React.createElement(IconRenderer, { icon })
+    ), /* @__PURE__ */ React.createElement(LinkDropdownMenu, { urls }));
   };
   var ExternalLinkIconButton_default = ExternalLinkIconButton;
 
   // src/components/ExternalLinkButtons.tsx
   var ExternalLinkButtons = ({ props }) => {
     const urls = props.urls;
-    const [loading, setLoading] = React.useState(true);
-    const [definitions, setDefinitions] = React.useState(
-      LinkDefinitions_default
-    );
-    const [urlSpecs, setUrlSpecs] = React.useState([]);
-    const abortController = new AbortController();
-    const updateDefinitions = (definition) => {
-      if (definitions.find((d) => d.name === definition.name))
-        return;
-      setDefinitions([...definitions, definition]);
-    };
-    const updateSpecs = (spec, url) => {
-      setUrlSpecs((prev) => {
-        const index = prev.findIndex(
-          (s) => s.definition.name === spec.definition.name
-        );
-        if (index !== -1) {
-          const existingSpec = prev[index];
-          if (existingSpec.urls.includes(url))
-            return prev;
-          const updatedSpec = {
-            ...prev[index],
-            urls: [...prev[index].urls, url]
-          };
-          return [
-            ...prev.slice(0, index),
-            updatedSpec,
-            ...prev.slice(index + 1)
-          ];
-        } else {
-          return [...prev, { definition: spec.definition, urls: [url] }];
-        }
-      });
-    };
-    const checkForCustomDefinitions = async () => {
-      if (!urls?.length)
-        return;
-      const customDefinitions = await JsonUtils.getCustomDefinitions();
-      if (!customDefinitions?.length)
-        return;
-      customDefinitions.map(async (link) => {
-        const getIcon = await IconUtils.loadIcon(link.icon);
-        if (!getIcon)
-          return;
-        updateDefinitions({
-          name: link.name,
-          icon: getIcon,
-          addresses: link.addresses,
-          regex: link.regex
-        });
-      });
-      setLoading(false);
-    };
-    const pairLinksToDefinitions = () => {
-      urls?.map((url) => {
-        const lookup = definitions.find(
-          (d) => d.addresses.find((addr) => {
-            const regex = new RegExp(
-              d.regex ?? `https?://(?:www.)?${addr}/`
-            );
-            return url.match(regex);
-          })
-        );
-        if (lookup) {
-          updateSpecs(
-            {
-              definition: lookup,
-              urls: []
-            },
-            url
-          );
-        } else {
-          const other = LinkDefinitions_default.find(
-            (d) => d.name === "other"
-          );
-          if (!other)
-            return;
-          updateSpecs(
-            {
-              definition: other,
-              urls: []
-            },
-            url
-          );
-        }
-      });
-    };
-    React.useEffect(() => {
-      checkForCustomDefinitions();
-      if (!loading) {
-        pairLinksToDefinitions();
-      }
-      return () => abortController.abort();
-    }, [loading, definitions]);
-    const renderIconButtons = () => {
-      return urlSpecs.map((spec, i) => {
-        if (!spec.urls.length)
-          return;
-        return /* @__PURE__ */ React.createElement(
-          ExternalLinkIconButton_default,
-          {
-            key: i,
-            urls: spec.urls,
-            className: spec.definition.name,
-            icon: spec.definition.icon
-          }
-        );
-      });
-    };
+    const { urlSpecs, loading } = useExternalLinkSpecs(urls);
     if (loading)
       return null;
-    return /* @__PURE__ */ React.createElement(React.Fragment, null, renderIconButtons());
+    return /* @__PURE__ */ React.createElement(React.Fragment, null, urlSpecs.map(
+      (spec, i) => spec.urls.length ? /* @__PURE__ */ React.createElement(
+        ExternalLinkIconButton_default,
+        {
+          key: i,
+          urls: spec.urls,
+          className: spec.definition.name,
+          icon: spec.definition.icon
+        }
+      ) : null
+    ));
   };
   var ExternalLinkButtons_default = ExternalLinkButtons;
 

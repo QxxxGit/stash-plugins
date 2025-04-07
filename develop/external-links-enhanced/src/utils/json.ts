@@ -1,7 +1,7 @@
 import { customDefinitionsPath } from "../globals";
 import { ILinkDefinition } from "../types/LinkDefinitions";
 
-const getCustomDefinitions = async (signal: AbortSignal) => {
+const getCustomDefinitions = async () => {
 	try {
 		const json = (await fetch(customDefinitionsPath)
 			.then((response) => response.json())

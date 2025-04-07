@@ -85,8 +85,40 @@
   ];
   var LinkDefinitions_default = DefaultLinkDefinitions;
 
+  // src/utils/svg.ts
+  var loadSvgIcon = async (file) => {
+    try {
+      const svg = await fetch(`${customAssetPath}/${file}`).then((response) => response.text()).then((str) => {
+        const domParser = new DOMParser();
+        const doc = domParser.parseFromString(str, "image/svg+xml");
+        const svgElement = doc.querySelector("svg");
+        return svgElement;
+      });
+      return svg;
+    } catch (e) {
+      console.error(`Error loading svg: ${file}, ${e}`);
+      return null;
+    }
+  };
+  var SvgUtils = {
+    loadSvgIcon
+  };
+
+  // src/utils/icon.ts
+  var loadIcon = async (file) => {
+    if (file instanceof String)
+      return null;
+    if (file.includes(".svg")) {
+      return await SvgUtils.loadSvgIcon(file);
+    }
+    return file;
+  };
+  var IconUtils = {
+    loadIcon
+  };
+
   // src/utils/json.ts
-  var getCustomDefinitions = async (signal) => {
+  var getCustomDefinitions = async () => {
     try {
       const json = await fetch(customDefinitionsPath).then((response) => response.json()).then((data) => data);
       return json;
@@ -96,20 +128,6 @@
   };
   var JsonUtils = {
     getCustomDefinitions
-  };
-
-  // src/utils/svg.ts
-  var loadSvgIcon = async (signal, file) => {
-    const svg = await fetch(`${customAssetPath}/${file}`).then((response) => response.text()).then((str) => {
-      const domParser = new DOMParser();
-      const doc = domParser.parseFromString(str, "image/svg+xml");
-      const svgElement = doc.querySelector("svg");
-      return svgElement;
-    });
-    return svg;
-  };
-  var SvgUtils = {
-    loadSvgIcon
   };
 
   // src/utils/text.ts
@@ -137,11 +155,8 @@
     return /* @__PURE__ */ React.createElement("a", { target: "_blank", rel: "noopener noreferrer", ...props });
   };
   var ExternalLinkIconButton = ({ icon = faLink, urls, className = "" }) => {
-    console.log("iconbtn");
-    if (!urls.length) {
-      console.log("no urls");
+    if (!urls.length)
       return null;
-    }
     const { Button, Dropdown } = libraries.Bootstrap;
     const { Icon } = components;
     const Menu = () => ReactDOM.createPortal(
@@ -158,10 +173,10 @@
       document.body
     );
     const renderIcon = () => {
-      console.log("render icon");
       if (icon instanceof SVGElement) {
-        console.log("is svg");
         return /* @__PURE__ */ React.createElement("span", { dangerouslySetInnerHTML: { __html: icon.outerHTML } });
+      } else if (typeof icon === "string" && icon.includes(".")) {
+        return /* @__PURE__ */ React.createElement("img", { src: `${customAssetPath}/${icon}` });
       }
       return /* @__PURE__ */ React.createElement(Icon, { icon });
     };
@@ -216,21 +231,16 @@
     const checkForCustomDefinitions = async () => {
       if (!urls?.length)
         return;
-      const customDefinitions = await JsonUtils.getCustomDefinitions(
-        abortController.signal
-      );
+      const customDefinitions = await JsonUtils.getCustomDefinitions();
       if (!customDefinitions?.length)
         return;
       customDefinitions.map(async (link) => {
-        const svg = await SvgUtils.loadSvgIcon(
-          abortController.signal,
-          link.icon
-        );
-        if (!svg)
+        const getIcon = await IconUtils.loadIcon(link.icon);
+        if (!getIcon)
           return;
         updateDefinitions({
           name: link.name,
-          icon: svg,
+          icon: getIcon,
           addresses: link.addresses,
           regex: link.regex
         });

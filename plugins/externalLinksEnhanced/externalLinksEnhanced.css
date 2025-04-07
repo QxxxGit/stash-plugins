@@ -1,3 +1,10 @@
+.external-links-button .btn.link {
+  width: 36px;
+}
+.external-links-button .btn.link img {
+  width: 100%;
+  height: 100%;
+}
 .external-links-button .btn.link.youtube {
   color: red;
 }

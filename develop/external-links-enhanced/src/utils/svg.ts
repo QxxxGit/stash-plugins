@@ -1,20 +1,23 @@
 import { customAssetPath } from "../globals";
 
-const loadSvgIcon = async (
-	signal: AbortSignal,
-	file: any
-): Promise<SVGElement | null> => {
-	const svg = await fetch(`${customAssetPath}/${file}`)
-		.then((response) => response.text())
-		.then((str) => {
-			const domParser = new DOMParser();
-			const doc = domParser.parseFromString(str, "image/svg+xml");
-			const svgElement = doc.querySelector("svg");
+const loadSvgIcon = async (file: any): Promise<SVGElement | string | null> => {
+	try {
+		const svg = await fetch(`${customAssetPath}/${file}`)
+			.then((response) => response.text())
+			.then((str) => {
+				const domParser = new DOMParser();
+				const doc = domParser.parseFromString(str, "image/svg+xml");
+				const svgElement = doc.querySelector("svg");
 
-			return svgElement;
-		});
+				return svgElement;
+			});
 
-	return svg;
+		return svg;
+	} catch (e) {
+		console.error(`Error loading svg: ${file}, ${e}`);
+
+		return null;
+	}
 };
 
 export const SvgUtils = {

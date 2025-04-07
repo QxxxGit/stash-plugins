@@ -3,6 +3,7 @@ import DefaultLinkDefinitions, {
 	ILinkDefinition,
 	IURLSpecs,
 } from "../types/LinkDefinitions";
+import { IconUtils } from "../utils/icon";
 import { JsonUtils } from "../utils/json";
 import { SvgUtils } from "../utils/svg";
 import ExternalLinkIconButton from "./ExternalLinkIconButton";
@@ -59,23 +60,18 @@ const ExternalLinkButtons: React.FC<{
 	const checkForCustomDefinitions = async () => {
 		if (!urls?.length) return;
 
-		const customDefinitions = await JsonUtils.getCustomDefinitions(
-			abortController.signal
-		);
+		const customDefinitions = await JsonUtils.getCustomDefinitions();
 
 		if (!customDefinitions?.length) return;
 
 		customDefinitions.map(async (link) => {
-			const svg = await SvgUtils.loadSvgIcon(
-				abortController.signal,
-				link.icon
-			);
+			const getIcon = await IconUtils.loadIcon(link.icon);
 
-			if (!svg) return;
+			if (!getIcon) return;
 
 			updateDefinitions({
 				name: link.name,
-				icon: svg,
+				icon: getIcon,
 				addresses: link.addresses,
 				regex: link.regex,
 			});

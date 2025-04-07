@@ -100,6 +100,20 @@ const ExternalLinkButtons: React.FC<{
 					},
 					url
 				);
+			} else {
+				const other = DefaultLinkDefinitions.find(
+					(d) => d.name === "other"
+				);
+
+				if (!other) return;
+
+				updateSpecs(
+					{
+						definition: other,
+						urls: [],
+					},
+					url
+				);
 			}
 		});
 	};

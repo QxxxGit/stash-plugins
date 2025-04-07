@@ -55,7 +55,8 @@
     {
       name: "tumblr",
       icon: faTumblr,
-      addresses: ["tumblr.com"]
+      addresses: ["tumblr.com"],
+      regex: "^https?\\://(.+)tumblr.com/"
     },
     {
       name: "twitch",
@@ -261,6 +262,19 @@
           updateSpecs(
             {
               definition: lookup,
+              urls: []
+            },
+            url
+          );
+        } else {
+          const other = LinkDefinitions_default.find(
+            (d) => d.name === "other"
+          );
+          if (!other)
+            return;
+          updateSpecs(
+            {
+              definition: other,
               urls: []
             },
             url

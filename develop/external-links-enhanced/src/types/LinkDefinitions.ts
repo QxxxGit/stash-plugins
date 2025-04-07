@@ -60,6 +60,7 @@ const DefaultLinkDefinitions: ILinkDefinition[] = [
 		name: "tumblr",
 		icon: faTumblr,
 		addresses: ["tumblr.com"],
+		regex: "^https?\\:\/\/(.+)tumblr\.com\/",
 	},
 	{
 		name: "twitch",

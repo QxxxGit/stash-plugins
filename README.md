@@ -10,11 +10,12 @@ The easiest way to install my plugins is by adding the source to Stash. Start by
 | ------------ | ------------ |
 | ExternalLinksEnhanced | Adds additional icons for external links. |
 | QxSceneCard | Redesigns the scene card. |
+| QxStudioCardCSSTweak | Changes the layout of studio cards. |
+| QxTagCardCSSTweak | Changes the layout of tag cards on tags tab and when hovering on tags in different content. |
 | StashNotes | Adds a button to the navigation bar which opens a small window for writing notes to your browser's local storage. |
 
 ## Active Development
 
 | Plugin Name | Status |
 | ------------ | ------------ |
-| ExternalLinksEnhanced | Adding support for custom icons. Once finished, the plan is to add the plugin to Stash's CommunityScripts for others to add icons. |
 | QxScenePage | Redesigning the scene page; lots to do. |

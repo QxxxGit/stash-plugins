@@ -1,0 +1,6 @@
+name: Qx Tag Card CSS Tweak
+description: Changes the layout of tag cards on tags tab and when hovering on tags in different content.
+version: 1.0
+ui:
+  css:
+  - qxTagCardCSSTweak.css

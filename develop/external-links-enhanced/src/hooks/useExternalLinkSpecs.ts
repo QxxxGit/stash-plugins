@@ -13,6 +13,12 @@ export const useExternalLinkSpecs = (urls?: string[]) => {
 		DefaultLinkDefinitions
 	);
 
+	React.useEffect(() => {
+		setUrlSpecs([]);
+		setDefinitions(DefaultLinkDefinitions);
+		setLoading(true);
+	}, [urls]);
+
 	const updateDefinitions = React.useCallback(
 		(definition: ILinkDefinition) => {
 			setDefinitions((prev) =>

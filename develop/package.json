@@ -1,0 +1,9 @@
+{
+    "type": "module",
+    "scripts": {
+        "plop": "plop"
+    },
+    "devDependencies": {
+        "plop": "^4.0.1"
+    }
+}

@@ -1,0 +1,10 @@
+name: {{titleCase projectName}}
+description: {{sentenceCase description}}
+version: 1.0
+ui:
+  javascript:
+    - {{camelCase projectName}}.js
+  css:
+    - {{camelCase projectName}}.css
+  assets:
+    /: .

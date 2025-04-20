@@ -13,6 +13,7 @@ The easiest way to install my plugins is by adding the source to Stash. Start by
 | QxStudioCardCSSTweak | Changes the layout of studio cards. |
 | QxTagCardCSSTweak | Changes the layout of tag cards on tags tab and when hovering on tags in different content. |
 | StashNotes | Adds a button to the navigation bar which opens a small window for writing notes to your browser's local storage. |
+| StashNotifications | Receive notifications about plugin and scraper changes. |
 
 ## Active Development
 

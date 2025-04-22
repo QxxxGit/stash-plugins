@@ -245,6 +245,8 @@
         setNotifications(packages);
       }
     }, [loading]);
+    if (!hasNotifications)
+      return null;
     return /* @__PURE__ */ React.createElement("span", { className: "notification-btn-container" }, /* @__PURE__ */ React.createElement(Dropdown, null, /* @__PURE__ */ React.createElement(
       Dropdown.Toggle,
       {

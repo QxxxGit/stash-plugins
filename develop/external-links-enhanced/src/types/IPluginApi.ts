@@ -18,6 +18,7 @@ export interface IPluginApi {
 		};
 		FontAwesomeBrands: {
 			faFacebook: any;
+			faImdb: any;
 			faInstagram: any;
 			faPatreon: any;
 			faReddit: any;
@@ -27,6 +28,7 @@ export interface IPluginApi {
 			faTwitch: any;
 			faTwitter: any;
 			faVk: any;
+			faWordpress: any;
 			faYoutube: any;
 		};
 	};

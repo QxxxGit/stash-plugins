@@ -1,5 +1,6 @@
 import {
 	faFacebook,
+	faImdb,
 	faInstagram,
 	faLink,
 	faPatreon,
@@ -10,6 +11,7 @@ import {
 	faTwitch,
 	faTwitter,
 	faVk,
+	faWordpress,
 	faYoutube,
 } from "../globals";
 
@@ -30,6 +32,11 @@ const DefaultLinkDefinitions: ILinkDefinition[] = [
 		name: "facebook",
 		icon: faFacebook,
 		addresses: ["facebook.com"],
+	},
+	{
+		name: "imdb",
+		icon: faImdb,
+		addresses: ["imdb.com"],
 	},
 	{
 		name: "instagram",
@@ -76,6 +83,12 @@ const DefaultLinkDefinitions: ILinkDefinition[] = [
 		name: "vk",
 		icon: faVk,
 		addresses: ["vk.com"],
+	},
+	{
+		name: "wordpress",
+		icon: faWordpress,
+		addresses: ["wordpress.com"],
+		regex: "^https?\\:\/\/(.+)wordpress\.com\/",
 	},
 	{
 		name: "youtube",

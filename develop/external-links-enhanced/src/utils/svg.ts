@@ -2,7 +2,9 @@ import { customAssetPath } from "../globals";
 
 const loadSvgIcon = async (file: any): Promise<SVGElement | string | null> => {
 	try {
-		const svg = await fetch(`${customAssetPath}/${file}`)
+		const svg = await fetch(`${customAssetPath}/${file}`, {
+			cache: "no-store",
+		})
 			.then((response) => response.text())
 			.then((str) => {
 				const domParser = new DOMParser();

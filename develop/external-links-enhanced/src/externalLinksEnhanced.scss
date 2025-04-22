@@ -7,12 +7,12 @@
 			height: 100%;
 		}
 
-		&.youtube {
-			color: red;
-		}
-
 		&.facebook {
 			color: #1877f2;
+		}
+
+		&.imdb {
+			color: #f5c518;
 		}
 
 		&.patreon {
@@ -45,6 +45,14 @@
 
 		&.vk {
 			color: #4c75a3;
+		}
+
+		&.wordpress {
+			color: gray;
+		}
+
+		&.youtube {
+			color: red;
 		}
 	}
 }

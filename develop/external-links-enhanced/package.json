@@ -5,9 +5,8 @@
 	"license": "MIT",
 	"scripts": {
 		"build": "yarn run format && esbuild src/externalLinksEnhanced.tsx --bundle --outfile=dist/externalLinksEnhanced.js && yarn run sass && yarn run copy",
-		"copy": "yarn run copy:yml && yarn run copy:fonts",
+		"copy": "yarn run copy:yml",
 		"copy:yml": "cpx \"src/externalLinksEnhanced.yml\" \"dist\"",
-		"copy:fonts": "cpx \"src/fonts/*\" \"dist/fonts/\"",
 		"format": "prettier --write .",
 		"sass": "sass --no-source-map --style=expanded src/externalLinksEnhanced.scss:dist/externalLinksEnhanced.css"
 	},

@@ -7,6 +7,7 @@ export const { React, ReactDOM, libraries, patch, components } = api;
 export const { faLink } = libraries.FontAwesomeSolid;
 export const {
 	faFacebook,
+	faImdb,
 	faInstagram,
 	faPatreon,
 	faReddit,
@@ -16,6 +17,7 @@ export const {
 	faTwitch,
 	faTwitter,
 	faVk,
+	faWordpress,
 	faYoutube,
 } = libraries.FontAwesomeBrands;
 

@@ -3,7 +3,7 @@ import { ILinkDefinition } from "../types/LinkDefinitions";
 
 const getCustomDefinitions = async () => {
 	try {
-		const json = (await fetch(customDefinitionsPath)
+		const json = (await fetch(customDefinitionsPath, { cache: "no-store" })
 			.then((response) => response.json())
 			.then((data) => data)) as ILinkDefinition[];
 

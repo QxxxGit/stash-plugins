@@ -18,6 +18,8 @@ const StashNotificationsButton = () => {
 		}
 	}, [loading]);
 
+	if (!hasNotifications) return null;
+
 	return (
 		<span className="notification-btn-container">
 			<Dropdown>

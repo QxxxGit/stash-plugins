@@ -1,108 +1,246 @@
-@font-face { font-family: "Inter"; font-style: normal; font-weight: 100; font-display: swap; src: url("/plugin/qxSceneCard/assets/fonts/Inter-Thin.woff2") format("woff2"); }
-@font-face { font-family: "Inter"; font-style: normal; font-weight: 300; font-display: swap; src: url("/plugin/qxSceneCard/assets/fonts/Inter-Light.woff2") format("woff2"); }
-@font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("/plugin/qxSceneCard/assets/fonts/Inter-Regular.woff2") format("woff2"); }
-@font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("/plugin/qxSceneCard/assets/fonts/Inter-Bold.woff2") format("woff2"); }
+@font-face {
+	font-family: "Inter";
+	font-style: normal;
+	font-weight: 100;
+	font-display: swap;
+	src: url("/plugin/qxSceneCard/assets/fonts/Inter-Thin.woff2")
+		format("woff2");
+}
+@font-face {
+	font-family: "Inter";
+	font-style: normal;
+	font-weight: 300;
+	font-display: swap;
+	src: url("/plugin/qxSceneCard/assets/fonts/Inter-Light.woff2")
+		format("woff2");
+}
+@font-face {
+	font-family: "Inter";
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url("/plugin/qxSceneCard/assets/fonts/Inter-Regular.woff2")
+		format("woff2");
+}
+@font-face {
+	font-family: "Inter";
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url("/plugin/qxSceneCard/assets/fonts/Inter-Bold.woff2")
+		format("woff2");
+}
+
+:root {
+	--gender-m: lightblue;
+	--gender-f: pink;
+	--gender-n: #dda0dd;
+}
 
 .scene-card {
-    font-family: 'Inter', sans-serif;
-    font-weight: 400;
-    font-size: 12px;
-    border-radius: 6px;
-    box-shadow: 3px 3px 2px 0px #10161a66,0 0 #10161a00,0 0 #10161a00;
+	font-family: "Inter", sans-serif;
+	font-weight: 400;
+	font-size: 12px;
+	border-radius: 6px;
+	box-shadow:
+		3px 3px 2px 0px #10161a66,
+		0 0 #10161a00,
+		0 0 #10161a00;
 
-    &.watched {
-        opacity: 0.3;
-    }
+	&.watched {
+		opacity: 0.3;
+	}
 
-    .hide {
-        display: none;
-    }
+	.hide {
+		display: none;
+	}
 
-    .card-section {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
+	.card-section {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
 
-        .performers {
-            order: 1;
-            display: flex;
-            line-height: 2em;
-            width: 100%;
-            justify-content: space-between;
-            overflow-y: hidden;
+		.performers {
+			order: 1;
+			display: flex;
+			flex-wrap: nowrap;
+			overflow: hidden;
+			width: 100%;
+			line-height: 2em;
+			max-height: 2em;
 
-            .list {
-                display: flex;
-                line-height: 2em;
-                max-height: 2em;
-                overflow-y: hidden;
-                flex-wrap: wrap;
+			.list {
+				display: flex;
+				flex-wrap: nowrap;
+				width: 90%;
+				position: relative;
 
-                a {
-                    font-weight: 700;
-                    margin-right: 1em;
-    
-                    &.MALE,
-                    &.TRANSGENDER_MALE {
-                        color: lightblue;
-                    }
-    
-                    &.FEMALE,
-                    &.TRANSGENDER_FEMALE {
-                        color: pink;
-                    }
-    
-                    &.INTERSEX,
-                    &.NONBINARY {
-                        color: #DDA0DD;
-                    }
-                }
-            }
-        }
+				span.performer-name {
+					flex-shrink: 0;
+					margin-right: 1em;
 
-        // scene title
-        a {
-            order: 2;
+					a {
+						font-weight: 700;
 
-            .card-section-title {
-                font-family: 'Inter', sans-serif;
-                font-weight: 400;
-                font-size: 18px;
-                height: 2em;
-                line-height: 1em;
-                align-items: unset;
-            }
-        }
+						&.MALE,
+						&.TRANSGENDER_MALE {
+							color: var(--gender-m);
+						}
 
-        .footer {
-            display: block;
-            width: 100%;
-            order: 3;
-            margin-top: auto;
-    
-            span {
-                display: inline-block;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                width: 33%;
-    
-                &.studio {
-                    font-weight: 400;
+						&.FEMALE,
+						&.TRANSGENDER_FEMALE {
+							color: var(--gender-f);
+						}
 
-                    > a {
-                        color: lightgray;
-                    }
-                }
-    
-                &.views {
-                    text-align: center;
-                }
-    
-                &.date {
-                    text-align: right;
-                }
-            }
-        }
-    }
+						&.INTERSEX,
+						&.NONBINARY {
+							color: var(--gender-n);
+						}
+					}
+				}
+			}
+
+			span.show-more {
+				width: 10%;
+				flex-shrink: 0;
+				margin-left: 0.5em;
+				text-align: right;
+			}
+		}
+
+		// scene title
+		a {
+			order: 2;
+
+			.card-section-title {
+				font-family: "Inter", sans-serif;
+				font-weight: 400;
+				font-size: 18px;
+				height: 2em;
+				line-height: 1em;
+				align-items: unset;
+			}
+		}
+
+		.footer {
+			display: block;
+			width: 100%;
+			order: 3;
+			margin-top: auto;
+
+			span {
+				display: inline-block;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				width: 33%;
+
+				&.studio {
+					font-weight: 400;
+
+					> a {
+						color: lightgray;
+					}
+				}
+
+				&.views {
+					text-align: center;
+				}
+
+				&.date {
+					text-align: right;
+				}
+			}
+		}
+	}
+}
+
+#performer-popover-container {
+	font-family: "Inter", sans-serif;
+	min-width: 225px;
+	border-radius: 10px;
+	padding: 0.5em;
+	box-shadow:
+		1px 1px 2px 0px #10161a66,
+		0 0 #10161a00,
+		0 0 #10161a00;
+
+	.flex-col {
+		display: flex;
+		flex-direction: column;
+		flex-wrap: nowrap;
+
+		a {
+			text-decoration: none !important;
+
+			.performer-row {
+				display: flex;
+				flex-wrap: nowrap;
+				gap: 1em;
+				padding: 0.5em;
+				text-decoration: none;
+
+				&:hover {
+					background-color: rgba(0, 0, 0, 0.2);
+					border-radius: 10px;
+				}
+
+				img {
+					width: 50px;
+					max-width: 50px;
+					height: 50px;
+					max-height: 50px;
+					clip-path: circle();
+					object-fit: cover;
+				}
+
+				.performer-details {
+					display: flex;
+					flex: 9;
+					flex-direction: column;
+					text-wrap: nowrap;
+
+					.name {
+						font-size: 18px;
+						font-weight: 700;
+
+						&.MALE,
+						&.TRANSGENDER_MALE {
+							color: var(--gender-m);
+						}
+
+						&.FEMALE,
+						&.TRANSGENDER_FEMALE {
+							color: var(--gender-f);
+						}
+
+						&.INTERSEX,
+						&.NONBINARY {
+							color: var(--gender-n);
+						}
+					}
+
+					.age {
+						font-size: 16px;
+						font-weight: 500;
+						color: rgba(255, 255, 255, 0.5);
+					}
+				}
+			}
+		}
+
+		.qx-loading-indicator > .LoadingIndicator {
+			padding-top: 0.5em;
+
+			.spinner-border {
+				width: 1em;
+				height: 1em;
+			}
+
+			h4.LoadingIndicator-message {
+				font-family: "Inter", sans-serif;
+				font-size: 1rem;
+			}
+		}
+	}
 }

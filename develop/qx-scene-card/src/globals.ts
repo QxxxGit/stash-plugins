@@ -1,10 +1,5 @@
-import { IPluginApi } from "./types";
+import { IPluginApi } from "./types/IPluginApi";
 
 const api = (window as any).PluginApi as IPluginApi;
 
-export const {
-    React,
-    GQL,
-    libraries,
-    patch
-} = api;
+export const { React, GQL, libraries, patch, components } = api;

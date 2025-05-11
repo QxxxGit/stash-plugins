@@ -1,23 +1,25 @@
 {
-  "name": "qx-scene-card",
-  "version": "1.0.0",
-  "main": "qxSceneCard.tsx",
-  "license": "MIT",
-  "scripts": {
-    "build": "esbuild src/qxSceneCard.tsx --bundle --outfile=dist/qxSceneCard.js && yarn run sass && yarn run copy",
-    "copy": "yarn run copy:yml && yarn run copy:fonts",
-    "copy:yml": "cpx \"src/qxSceneCard.yml\" \"dist\"",
-    "copy:fonts": "cpx \"src/fonts/*\" \"dist/fonts/\"",
-    "sass": "sass --no-source-map --style=expanded src/qxSceneCard.scss:dist/qxSceneCard.css"
-  },
-  "devDependencies": {
-    "@types/react": "^18.2.48",
-    "@types/react-dom": "^18.2.18",
-    "cpx": "^1.5.0",
-    "esbuild": "^0.20.0",
-    "sass": "^1.71.1",
-    "ts-loader": "^9.5.1",
-    "typescript": "^5.3.3"
-  },
-  "dependencies": {}
+	"name": "qx-scene-card",
+	"version": "1.1.0",
+	"main": "qxSceneCard.tsx",
+	"license": "MIT",
+	"scripts": {
+		"build": "yarn run format && esbuild src/qxSceneCard.tsx --bundle --outfile=dist/qxSceneCard.js && yarn run sass && yarn run copy",
+		"copy": "yarn run copy:yml && yarn run copy:fonts",
+		"copy:yml": "cpx \"src/qxSceneCard.yml\" \"dist\"",
+		"copy:fonts": "cpx \"src/fonts/*\" \"dist/fonts/\"",
+		"format": "prettier --write .",
+		"sass": "sass --no-source-map --style=expanded src/qxSceneCard.scss:dist/qxSceneCard.css"
+	},
+	"devDependencies": {
+		"@types/react": "^18.2.48",
+		"@types/react-dom": "^18.2.18",
+		"cpx": "^1.5.0",
+		"esbuild": "^0.20.0",
+		"prettier": "3.5.3",
+		"sass": "^1.71.1",
+		"ts-loader": "^9.5.1",
+		"typescript": "^5.3.3"
+	},
+	"dependencies": {}
 }

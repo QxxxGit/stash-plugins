@@ -26,6 +26,12 @@
   font-display: swap;
   src: url("/plugin/qxSceneCard/assets/fonts/Inter-Bold.woff2") format("woff2");
 }
+:root {
+  --gender-m: lightblue;
+  --gender-f: pink;
+  --gender-n: #dda0dd;
+}
+
 .scene-card {
   font-family: "Inter", sans-serif;
   font-weight: 400;
@@ -47,30 +53,39 @@
 .scene-card .card-section .performers {
   order: 1;
   display: flex;
-  line-height: 2em;
+  flex-wrap: nowrap;
+  overflow: hidden;
   width: 100%;
-  justify-content: space-between;
-  overflow-y: hidden;
+  line-height: 2em;
+  max-height: 2em;
 }
 .scene-card .card-section .performers .list {
   display: flex;
-  line-height: 2em;
-  max-height: 2em;
-  overflow-y: hidden;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  width: 90%;
+  position: relative;
 }
-.scene-card .card-section .performers .list a {
-  font-weight: 700;
+.scene-card .card-section .performers .list span.performer-name {
+  flex-shrink: 0;
   margin-right: 1em;
 }
-.scene-card .card-section .performers .list a.MALE, .scene-card .card-section .performers .list a.TRANSGENDER_MALE {
-  color: lightblue;
+.scene-card .card-section .performers .list span.performer-name a {
+  font-weight: 700;
 }
-.scene-card .card-section .performers .list a.FEMALE, .scene-card .card-section .performers .list a.TRANSGENDER_FEMALE {
-  color: pink;
+.scene-card .card-section .performers .list span.performer-name a.MALE, .scene-card .card-section .performers .list span.performer-name a.TRANSGENDER_MALE {
+  color: var(--gender-m);
 }
-.scene-card .card-section .performers .list a.INTERSEX, .scene-card .card-section .performers .list a.NONBINARY {
-  color: #DDA0DD;
+.scene-card .card-section .performers .list span.performer-name a.FEMALE, .scene-card .card-section .performers .list span.performer-name a.TRANSGENDER_FEMALE {
+  color: var(--gender-f);
+}
+.scene-card .card-section .performers .list span.performer-name a.INTERSEX, .scene-card .card-section .performers .list span.performer-name a.NONBINARY {
+  color: var(--gender-n);
+}
+.scene-card .card-section .performers span.show-more {
+  width: 10%;
+  flex-shrink: 0;
+  margin-left: 0.5em;
+  text-align: right;
 }
 .scene-card .card-section a {
   order: 2;
@@ -107,4 +122,74 @@
 }
 .scene-card .card-section .footer span.date {
   text-align: right;
+}
+
+#performer-popover-container {
+  font-family: "Inter", sans-serif;
+  min-width: 225px;
+  border-radius: 10px;
+  padding: 0.5em;
+  box-shadow: 1px 1px 2px 0px rgba(16, 22, 26, 0.4), 0 0 rgba(16, 22, 26, 0), 0 0 rgba(16, 22, 26, 0);
+}
+#performer-popover-container .flex-col {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+#performer-popover-container .flex-col a {
+  text-decoration: none !important;
+}
+#performer-popover-container .flex-col a .performer-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1em;
+  padding: 0.5em;
+  text-decoration: none;
+}
+#performer-popover-container .flex-col a .performer-row:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+#performer-popover-container .flex-col a .performer-row img {
+  width: 50px;
+  max-width: 50px;
+  height: 50px;
+  max-height: 50px;
+  clip-path: circle();
+  object-fit: cover;
+}
+#performer-popover-container .flex-col a .performer-row .performer-details {
+  display: flex;
+  flex: 9;
+  flex-direction: column;
+  text-wrap: nowrap;
+}
+#performer-popover-container .flex-col a .performer-row .performer-details .name {
+  font-size: 18px;
+  font-weight: 700;
+}
+#performer-popover-container .flex-col a .performer-row .performer-details .name.MALE, #performer-popover-container .flex-col a .performer-row .performer-details .name.TRANSGENDER_MALE {
+  color: var(--gender-m);
+}
+#performer-popover-container .flex-col a .performer-row .performer-details .name.FEMALE, #performer-popover-container .flex-col a .performer-row .performer-details .name.TRANSGENDER_FEMALE {
+  color: var(--gender-f);
+}
+#performer-popover-container .flex-col a .performer-row .performer-details .name.INTERSEX, #performer-popover-container .flex-col a .performer-row .performer-details .name.NONBINARY {
+  color: var(--gender-n);
+}
+#performer-popover-container .flex-col a .performer-row .performer-details .age {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+}
+#performer-popover-container .flex-col .qx-loading-indicator > .LoadingIndicator {
+  padding-top: 0.5em;
+}
+#performer-popover-container .flex-col .qx-loading-indicator > .LoadingIndicator .spinner-border {
+  width: 1em;
+  height: 1em;
+}
+#performer-popover-container .flex-col .qx-loading-indicator > .LoadingIndicator h4.LoadingIndicator-message {
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
 }

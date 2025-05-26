@@ -71,11 +71,6 @@
       addresses: ["twitch.tv"]
     },
     {
-      name: "twitter",
-      icon: faTwitter,
-      addresses: ["twitter.com", "x.com"]
-    },
-    {
       name: "vk",
       icon: faVk,
       addresses: ["vk.com"]
@@ -212,23 +207,36 @@
       setLoading(false);
     }, [updateDefinitions]);
     const pairLinksToDefinitions = React.useCallback(() => {
-      if (!urls?.length)
-        return;
+      if (!urls?.length) return;
+
       urls.forEach((url) => {
-        const matchedDefinition = definitions.find(
-          (d) => d.addresses.some((addr) => {
+        // 1) Try FA / custom.json...
+        const matchedDefinition = definitions.find((d) =>
+          d.addresses.some((addr) => {
             const regex = new RegExp(
-              d.regex ?? `https?://(?:www.)?${addr}/`
+              d.regex ?? `https?://(?:www\\.)?${addr}/`
             );
             return regex.test(url);
           })
         );
-        const definition = matchedDefinition || LinkDefinitions_default.find((d) => d.name === "other");
-        if (definition) {
-          updateSpecs({ definition, urls: [] }, url);
+        if (matchedDefinition) {
+          updateSpecs({ definition: matchedDefinition, urls: [] }, url);
+          return;
         }
+
+        // 2) …else fallback to Google favicon
+        const domain = new URL(url).hostname.replace(/^www\./, "");
+        const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+        const dynamicDef = {
+          name: `favicon-${domain}`,
+          icon: faviconUrl,
+          addresses: [domain],
+        };
+        updateDefinitions(dynamicDef);
+        updateSpecs({ definition: dynamicDef, urls: [] }, url);
       });
-    }, [urls, definitions, updateSpecs]);
+    }, [urls, definitions, updateDefinitions, updateSpecs]);
+
     React.useEffect(() => {
       if (urls?.length) {
         loadCustomDefinitions();
@@ -247,13 +255,31 @@
   // src/components/IconRenderer.tsx
   var IconRenderer = ({ icon }) => {
     const { Icon } = components;
+
+    // 1) raw SVG from custom.json
     if (icon instanceof SVGElement) {
-      return /* @__PURE__ */ React.createElement("span", { dangerouslySetInnerHTML: { __html: icon.outerHTML } });
+      return React.createElement("span", {
+        dangerouslySetInnerHTML: { __html: icon.outerHTML },
+      });
     }
-    if (typeof icon === "string" && icon.includes(".")) {
-      return /* @__PURE__ */ React.createElement("img", { src: `${customAssetPath}/${icon}` });
+
+    // 2) string → either an absolute favicon URL or a local custom asset
+    if (typeof icon === "string") {
+      // a) absolute URL (Google favicon)
+      if (icon.startsWith("http")) {
+        return React.createElement("img", { src: icon, alt: "" });
+      }
+      // b) local file (icon.png / icon.svg)
+      if (icon.includes(".")) {
+        return React.createElement("img", {
+          src: `${customAssetPath}/${icon}`,
+          alt: "",
+        });
+      }
     }
-    return /* @__PURE__ */ React.createElement(Icon, { icon });
+
+    // 3) FontAwesome default
+    return React.createElement(Icon, { icon });
   };
 
   // src/utils/text.ts

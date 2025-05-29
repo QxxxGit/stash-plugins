@@ -9,6 +9,7 @@ The easiest way to install my plugins is by adding the source to Stash. Start by
 | Plugin Name | Description |
 | ------------ | ------------ |
 | ExternalLinksEnhanced | Adds additional icons for external links. |
+| Flexible Date Input | A helper for date formatting. |
 | QxSceneCard | Redesigns the scene card. |
 | QxStudioCardCSSTweak | Changes the layout of studio cards. |
 | QxTagCardCSSTweak | Changes the layout of tag cards on tags tab and when hovering on tags in different content. |

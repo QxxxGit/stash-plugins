@@ -1,0 +1,10 @@
+name: Flexible Date Input
+description: A helper for date formatting
+version: 1.0
+ui:
+    javascript:
+        - flexibleDateInput.js
+    css:
+        - flexibleDateInput.css
+    assets:
+        /: .

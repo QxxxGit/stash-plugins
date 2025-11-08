@@ -4,7 +4,5 @@ version: 1.0
 ui:
     javascript:
         - flexibleDateInput.js
-    css:
-        - flexibleDateInput.css
     assets:
         /: .

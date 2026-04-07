@@ -12,11 +12,27 @@
   }) => {
     if (!error)
       return null;
+    const extractDateParts = (regex) => {
+      const match = value.match(regex);
+      if (!match)
+        return null;
+      let [, year, month, day] = match;
+      month = month.padStart(2, "0");
+      day = day.padStart(2, "0");
+      return { year, month, day };
+    };
     const format = () => {
-      const compactMatch = value.match(/^(\d{4})(\d{2})(\d{2})$/);
-      if (compactMatch) {
-        const [, year, month, day] = compactMatch;
-        return `${year}-${month}-${day}`;
+      const datePatterns = [
+        /^(\d{4})(\d{2})(\d{2})$/,
+        // compact format: 20260407
+        /^(\d{4})年(\d{1,2})月(\d{1,2})日$/
+        // Japanese format: 2026年04月07日
+      ];
+      for (const regex of datePatterns) {
+        const parts = extractDateParts(regex);
+        if (parts) {
+          return `${parts.year}-${parts.month}-${parts.day}`;
+        }
       }
       const trimmedValue = value.trim();
       const isEpoch = /^\d+$/.test(trimmedValue);

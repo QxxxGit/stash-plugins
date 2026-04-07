@@ -8,13 +8,31 @@ const DateInputHelper: React.FC<IDateInputProps> = ({
 }) => {
 	if (!error) return null;
 
+	const extractDateParts = (regex: RegExp) => {
+		const match = value.match(regex);
+		if (!match) return null;
+
+		let [, year, month, day] = match;
+
+		// normalize to 2 digits
+		month = month.padStart(2, "0");
+		day = day.padStart(2, "0");
+
+		return { year, month, day };
+	};
+
 	const format = () => {
-		const compactMatch = value.match(/^(\d{4})(\d{2})(\d{2})$/);
+		const datePatterns = [
+			/^(\d{4})(\d{2})(\d{2})$/, // compact format: 20260407
+			/^(\d{4})年(\d{1,2})月(\d{1,2})日$/, // Japanese format: 2026年04月07日
+		];
 
-		if (compactMatch) {
-			const [, year, month, day] = compactMatch;
+		for (const regex of datePatterns) {
+			const parts = extractDateParts(regex);
 
-			return `${year}-${month}-${day}`;
+			if (parts) {
+				return `${parts.year}-${parts.month}-${parts.day}`;
+			}
 		}
 
 		const trimmedValue = value.trim();

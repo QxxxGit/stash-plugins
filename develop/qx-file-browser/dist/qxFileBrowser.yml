@@ -1,0 +1,8 @@
+name: Qx File Browser
+description: Browse your files within Stash!
+version: 0.1
+ui:
+    javascript:
+        - qxFileBrowser.js
+    css:
+        - qxFileBrowser.css

@@ -17,13 +17,16 @@
     faTwitter,
     faVk,
     faWordpress,
-    faYoutube
+    faYoutube,
   } = libraries.FontAwesomeBrands;
-  var customAssetPath = "./plugin/externalLinksEnhanced/assets/custom";
+  var pluginAssetPath = "./plugin/externalLinksEnhanced/assets";
+  var defaultAssetPath = `${pluginAssetPath}/default`;
+  var customAssetPath = `${pluginAssetPath}/custom`;
+  var defaultDefinitionsPath = `${defaultAssetPath}/default.json`;
   var customDefinitionsPath = `${customAssetPath}/custom.json`;
 
-  // src/types/LinkDefinitions.ts
-  var DefaultLinkDefinitions = [
+  // src/types/Definitions.ts
+  var DefaultDefinitions = [
     {
       name: "facebook",
       icon: faFacebook,
@@ -97,12 +100,12 @@
       addresses: []
     }
   ];
-  var LinkDefinitions_default = DefaultLinkDefinitions;
+  var Definitions_default = DefaultDefinitions;
 
   // src/utils/svg.ts
-  var loadSvgIcon = async (file) => {
+  var loadSvgIcon = async (file, assetPath) => {
     try {
-      const svg = await fetch(`${customAssetPath}/${file}`, {
+      const svg = await fetch(`${assetPath}/${file}`, {
         cache: "no-store"
       }).then((response) => response.text()).then((str) => {
         const domParser = new DOMParser();
@@ -121,100 +124,102 @@
   };
 
   // src/utils/icon.ts
-  var loadIcon = async (file) => {
+  var loadIcon = async (file, assetPath) => {
     if (file instanceof String)
       return null;
     if (file.includes(".svg")) {
-      return await SvgUtils.loadSvgIcon(file);
+      return await SvgUtils.loadSvgIcon(file, assetPath);
     }
-    return file;
+    return `${assetPath}/${file}`;
   };
   var IconUtils = {
     loadIcon
   };
 
   // src/utils/json.ts
-  var getCustomDefinitions = async () => {
+  var loadDefinitionsJSON = async (path, optional = false) => {
     try {
-      const json = await fetch(customDefinitionsPath, { cache: "no-store" }).then((response) => response.json()).then((data) => data);
+      const response = await fetch(path, { cache: "no-store" });
+      if (optional && response.status === 404)
+        return [];
+      if (!response.ok)
+        throw new Error(`HTTP ${response.status}`);
+      const json = await response.json();
+      if (!Array.isArray(json))
+        throw new Error("Expected an array of link definitions");
       return json;
     } catch (e) {
-      console.error(`Error loading custom definitions: ${e}`);
+      console.error(`Error loading definitions from ${path}: ${e}`);
+      return [];
     }
   };
+  var getDefinitions = async () => {
+    const [bundledDefinitions, personalDefinitions] = await Promise.all([
+      loadDefinitionsJSON(defaultDefinitionsPath),
+      loadDefinitionsJSON(customDefinitionsPath, true)
+    ]);
+    return [
+      ...bundledDefinitions.map((definition) => ({ ...definition, assetPath: defaultAssetPath })),
+      ...personalDefinitions.map((definition) => ({ ...definition, assetPath: customAssetPath }))
+    ];
+  };
   var JsonUtils = {
-    getCustomDefinitions
+    getDefinitions
   };
 
   // src/hooks/useExternalLinkSpecs.ts
   var useExternalLinkSpecs = (urls) => {
     const [loading, setLoading] = React.useState(true);
-    const [urlSpecs, setUrlSpecs] = React.useState([]);
     const [definitions, setDefinitions] = React.useState(
-      LinkDefinitions_default
+      Definitions_default
     );
     React.useEffect(() => {
-      setUrlSpecs([]);
-      setDefinitions(LinkDefinitions_default);
+      let cancelled = false;
       setLoading(true);
-    }, [urls]);
-    const updateDefinitions = React.useCallback(
-      (definition) => {
-        setDefinitions(
-          (prev) => prev.find((d) => d.name === definition.name) ? prev : [...prev, definition]
-        );
-      },
-      []
-    );
-    const updateSpecs = React.useCallback((spec, url) => {
-      setUrlSpecs((prev) => {
-        const index = prev.findIndex(
-          (s) => s.definition.name === spec.definition.name
-        );
-        if (index !== -1) {
-          const existingSpec = prev[index];
-          if (existingSpec.urls.includes(url))
-            return prev;
-          const updatedSpec = {
-            ...existingSpec,
-            urls: [...existingSpec.urls, url]
-          };
-          return [
-            ...prev.slice(0, index),
-            updatedSpec,
-            ...prev.slice(index + 1)
-          ];
-        }
-        return [
-          ...prev,
-          {
-            definition: spec.definition,
-            urls: [url]
+      const loadDefinitions = async () => {
+        const Definitions = await JsonUtils.getDefinitions();
+        const mergedDefinitions = [...Definitions_default];
+        for (const definition of Definitions) {
+          try {
+            if (!definition || typeof definition.name !== "string" || !definition.name.trim() ||
+              typeof definition.icon !== "string" || !definition.icon.trim() ||
+              !Array.isArray(definition.addresses) || definition.addresses.some((address) => typeof address !== "string")) {
+              throw new Error("Invalid link definition");
+            }
+            if (definition.regex !== undefined) {
+              if (typeof definition.regex !== "string")
+                throw new Error("Invalid definition regex");
+              new RegExp(definition.regex);
+            } else {
+              definition.addresses.forEach((address) => new RegExp(`https?://(?:www.)?${address}/`));
+            }
+            const icon = await IconUtils.loadIcon(definition.icon, definition.assetPath);
+            if (!icon)
+              continue;
+            const resolvedDefinition = { ...definition, icon };
+            const index = mergedDefinitions.findIndex((d) => d.name === definition.name);
+            if (index === -1) {
+              mergedDefinitions.push(resolvedDefinition);
+            } else {
+              mergedDefinitions[index] = resolvedDefinition;
+            }
+          } catch (e) {
+            console.error(`Error loading definition: ${e}`);
           }
-        ];
-      });
+        }
+        if (!cancelled) {
+          setDefinitions(mergedDefinitions);
+          setLoading(false);
+        }
+      };
+      loadDefinitions();
+      return () => { cancelled = true; };
     }, []);
-    const loadCustomDefinitions = React.useCallback(async () => {
-      const customDefinitions = await JsonUtils.getCustomDefinitions();
-      if (!customDefinitions?.length)
-        return;
-      for (const definition of customDefinitions) {
-        const getIcon = await IconUtils.loadIcon(definition.icon);
-        if (!getIcon)
-          continue;
-        updateDefinitions({
-          name: definition.name,
-          icon: getIcon,
-          addresses: definition.addresses,
-          regex: definition.regex
-        });
-      }
-      setLoading(false);
-    }, [updateDefinitions]);
-    const pairLinksToDefinitions = React.useCallback(() => {
-      if (!urls?.length)
-        return;
-      urls.forEach((url) => {
+    const urlSpecs = React.useMemo(() => {
+      const specs = [];
+      if (loading)
+        return specs;
+      (urls ?? []).forEach((url) => {
         const matchedDefinition = definitions.find(
           (d) => d.addresses.some((addr) => {
             const regex = new RegExp(
@@ -223,24 +228,18 @@
             return regex.test(url);
           })
         );
-        const definition = matchedDefinition || LinkDefinitions_default.find((d) => d.name === "other");
+        const definition = matchedDefinition || Definitions_default.find((d) => d.name === "other");
         if (definition) {
-          updateSpecs({ definition, urls: [] }, url);
+          const spec = specs.find((s) => s.definition.name === definition.name);
+          if (!spec) {
+            specs.push({ definition, urls: [url] });
+          } else if (!spec.urls.includes(url)) {
+            spec.urls.push(url);
+          }
         }
       });
-    }, [urls, definitions, updateSpecs]);
-    React.useEffect(() => {
-      if (urls?.length) {
-        loadCustomDefinitions();
-      } else {
-        setLoading(false);
-      }
-    }, [urls, loadCustomDefinitions]);
-    React.useEffect(() => {
-      if (!loading) {
-        pairLinksToDefinitions();
-      }
-    }, [loading, pairLinksToDefinitions]);
+      return specs;
+    }, [urls, definitions, loading]);
     return { urlSpecs, loading };
   };
 
@@ -251,7 +250,7 @@
       return /* @__PURE__ */ React.createElement("span", { dangerouslySetInnerHTML: { __html: icon.outerHTML } });
     }
     if (typeof icon === "string" && icon.includes(".")) {
-      return /* @__PURE__ */ React.createElement("img", { src: `${customAssetPath}/${icon}` });
+      return /* @__PURE__ */ React.createElement("img", { src: icon });
     }
     return /* @__PURE__ */ React.createElement(Icon, { icon });
   };
@@ -328,7 +327,8 @@
   var ExternalLinkButtons = ({ props }) => {
     const urls = props.urls;
     const { data } = api.utils.StashService.useConfiguration();
-    const openSingleLinksDirectly = data?.configuration?.plugins?.externalLinksEnhanced?.open_singlelinks_directly === true;
+    const settings = data?.configuration?.plugins?.externalLinksEnhanced;
+    const openSingleLinksDirectly = settings?.open_singlelinks_directly === true;
     const { urlSpecs, loading } = useExternalLinkSpecs(urls);
     if (loading)
       return null;
@@ -348,10 +348,10 @@
   var ExternalLinkButtons_default = ExternalLinkButtons;
 
   // src/externalLinksEnhanced.tsx
-  (function() {
+  (function () {
     patch.instead(
       "ExternalLinkButtons",
-      function(props, _, orig) {
+      function (props, _, orig) {
         return /* @__PURE__ */ React.createElement(ExternalLinkButtons_default, { props });
       }
     );

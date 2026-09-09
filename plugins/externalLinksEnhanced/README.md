@@ -1,6 +1,14 @@
 # External Links Enhanced
 
+https://discourse.stashapp.cc/t/external-links-enhanced/584
+
 Plugin that adds additional icons for external links.
+
+## Settings
+
+Enable `open_singlelinks_directly` in the plugin settings to open an icon's URL
+directly in a new tab when that icon has exactly one URL. Icons with multiple
+URLs still show a dropdown menu. When disabled or unset, all icons use dropdowns.
 
 ## Supported Links
 

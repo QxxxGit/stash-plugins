@@ -1,0 +1,3 @@
+# Also exclude personal files from git archives if accidentally tracked.
+/custom export-ignore
+/custom/** export-ignore

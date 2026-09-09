@@ -1,6 +1,11 @@
 name: External Links Enhanced
 description: Adds additional icons for external links.
-version: 1.2
+version: 2.0
+url: https://discourse.stashapp.cc/t/external-links-enhanced/584
+settings:
+  open_singlelinks_directly:
+    displayName: "Open single links from one domain directly."
+    type: BOOLEAN
 ui:
     javascript:
         - externalLinksEnhanced.js

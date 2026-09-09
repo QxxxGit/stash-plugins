@@ -1,0 +1,7 @@
+[
+    {
+        "name": "sitename",
+        "icon": "myicon.png",
+        "addresses": ["mysitename.com"]
+    }
+]

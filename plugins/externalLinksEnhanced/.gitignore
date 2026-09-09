@@ -1,0 +1,2 @@
+# Personal definitions and icons must never be shipped in plugin updates.
+/custom/

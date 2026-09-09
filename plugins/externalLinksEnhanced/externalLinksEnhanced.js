@@ -294,10 +294,25 @@
   };
 
   // src/components/ExternalLinkIconButton.tsx
-  var ExternalLinkIconButton = ({ icon = faLink, urls, className = "" }) => {
+  var ExternalLinkIconButton = ({ icon = faLink, urls, className = "", openSingleLinksDirectly = false }) => {
     if (!urls.length)
       return null;
     const { Button, Dropdown } = libraries.Bootstrap;
+    if (openSingleLinksDirectly && urls.length === 1) {
+      return /* @__PURE__ */ React.createElement("div", { className: "external-links-button" }, /* @__PURE__ */ React.createElement(
+        Button,
+        {
+          as: "a",
+          className: `minimal link ${className}`,
+          href: TextUtils.sanitiseURL(urls[0]),
+          target: "_blank",
+          rel: "noopener noreferrer",
+          title: urls[0],
+          "aria-label": urls[0]
+        },
+        /* @__PURE__ */ React.createElement(IconRenderer, { icon })
+      ));
+    }
     return /* @__PURE__ */ React.createElement(Dropdown, { className: "external-links-button" }, /* @__PURE__ */ React.createElement(
       Dropdown.Toggle,
       {
@@ -312,6 +327,8 @@
   // src/components/ExternalLinkButtons.tsx
   var ExternalLinkButtons = ({ props }) => {
     const urls = props.urls;
+    const { data } = api.utils.StashService.useConfiguration();
+    const openSingleLinksDirectly = data?.configuration?.plugins?.externalLinksEnhanced?.open_singlelinks_directly === true;
     const { urlSpecs, loading } = useExternalLinkSpecs(urls);
     if (loading)
       return null;
@@ -321,6 +338,7 @@
         {
           key: i,
           urls: spec.urls,
+          openSingleLinksDirectly,
           className: spec.definition.name,
           icon: spec.definition.icon
         }
